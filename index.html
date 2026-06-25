@@ -9,85 +9,451 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0f0f0d;--fg:#d4cfbe;--muted:#888876;--dim:#2a2a22;--accent:#b89a60;--mono:"JetBrains Mono",monospace;}
-html,body{background:var(--bg);color:var(--fg);font-family:var(--mono);font-size:16px;line-height:1.85;min-height:100vh}
-#pg{max-width:900px;margin:0 auto;padding:5rem clamp(1.5rem, 5vw, 4rem) 8rem;padding-left:clamp(3rem, 8vw, 7rem)}
-h1{font-size:2rem;font-weight:700;color:var(--fg);margin-bottom:1.8rem}
-h2{font-size:.9rem;font-weight:700;color:var(--accent);margin:3rem 0 1rem;letter-spacing:.1em;text-transform:uppercase}
-p{color:var(--muted);font-size:15px;line-height:1.95;margin-bottom:1.1rem;max-width:700px}
-ul{list-style:none;margin-bottom:1rem}
-ul li{color:var(--muted);font-size:14px;padding:.3rem 0;max-width:700px;line-height:1.8}
-ul li::before{content:"-- ";color:var(--dim)}
-ul li strong{color:var(--fg);font-weight:400}
-hr{border:none;border-top:1px solid var(--dim);margin:0.5rem 0}
-.links{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
-.lnk{color:var(--muted);text-decoration:none;font-size:14px;padding:5px 14px;border:1px solid var(--dim);transition:all .15s}
-.lnk:hover{color:var(--fg);border-color:var(--muted)}
-#term-wrap{padding-top:1rem}
-#term-hint{font-size:13px;color:var(--muted);margin-bottom:2rem;line-height:1.9}
-#term-hint span{color:var(--fg)}
-#term-output{margin-bottom:1.2rem;min-height:0}
-.irow{display:flex;align-items:center}
-.pr{color:var(--accent);flex-shrink:0;margin-right:.5rem;font-size:13px;white-space:nowrap}
-#cmd{background:transparent;border:none;outline:none;color:var(--fg);font-family:var(--mono);font-size:15px;flex:1;caret-color:var(--accent);-webkit-appearance:none;box-shadow:none}
-.tree-row{display:flex;align-items:baseline;gap:.6rem;padding:.18rem 0;font-size:14px}
-.br{color:var(--dim);user-select:none;flex-shrink:0}
-.dn{color:var(--fg)}.fn{color:var(--muted)}.xn{color:var(--fg);font-style:italic}.nt{color:var(--muted);font-size:12px}
-.sh{color:var(--accent);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
-.proj-item{padding:.65rem 0;border-bottom:1px solid var(--dim)}
-.proj-item:last-child{border-bottom:none}
-.proj-top{display:flex;justify-content:space-between;gap:.5rem;margin-bottom:.3rem}
-.pname{color:var(--fg);font-size:14px}.plang{color:var(--muted);font-size:12px}
-.pdesc{color:var(--muted);font-size:13.5px;line-height:1.7}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:.5rem 2.5rem;font-size:14px}
-.kk{color:var(--accent)}.kvv{color:var(--muted)}
-.dump-sep{border:none;border-top:1px solid var(--dim);margin:2.5rem 0}
-.dump-lbl{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
-.dump-lbl em{color:var(--accent);font-style:normal}
-.t-err{color:var(--muted);font-size:13px}.t-err span{color:var(--fg)}
-.t-ok{color:var(--muted);font-size:13px;line-height:2.4}
-.blog-soon{font-size:13px;color:var(--muted);font-style:italic}
+/* ── Reset ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Tokens ───────────────────────────────────────────────── */
+:root {
+  --bg:      #0c0c0a;
+  --surface: #111110;
+  --fg:      #d6d0be;
+  --muted:   #7a7a68;
+  --dim:     #252520;
+  --border:  #2e2e28;
+  --accent:  #c9a55a;
+  --accent2: #6b9e78;
+  --glow:    rgba(201, 165, 90, 0.07);
+  --mono:    "JetBrains Mono", "Fira Code", monospace;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 16px;
+  line-height: 1.85;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page shell ───────────────────────────────────────────── */
+#pg {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 5rem clamp(2rem, 7vw, 6rem) 8rem;
+}
+
+/* ── Status bar (top) ─────────────────────────────────────── */
+#statusbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 5rem;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .08em;
+}
+
+#statusbar .bar-path { color: var(--fg); }
+#statusbar .bar-sep  { color: var(--border); }
+
+/* ── Hero ─────────────────────────────────────────────────── */
+#hero {
+  margin-bottom: 4rem;
+}
+
+#hero h1 {
+  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: -.01em;
+  margin-bottom: .9rem;
+  line-height: 1.2;
+}
+
+#hero .tagline {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 2;
+  max-width: 600px;
+}
+
+#hero .tagline p { margin-bottom: .6rem; }
+#hero .tagline p:last-child { margin-bottom: 0; }
+
+#hero .tagline strong {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+/* ── Section heading ──────────────────────────────────────── */
+.sec-label {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.3rem;
+  margin-top: 3.5rem;
+}
+
+.sec-label::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Prose ────────────────────────────────────────────────── */
+.prose {
+  max-width: 640px;
+}
+
+.prose p {
+  font-size: 14.5px;
+  color: var(--muted);
+  line-height: 2;
+  margin-bottom: 1rem;
+}
+
+.prose p:last-child { margin-bottom: 0; }
+
+/* ── Divider ──────────────────────────────────────────────── */
+.sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3.5rem 0;
+}
+
+/* ── Terminal card ────────────────────────────────────────── */
+#term-card {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.02) inset,
+    0 12px 50px rgba(0,0,0,.6),
+    0 0 80px var(--glow);
+  overflow: hidden;
+  margin-top: 1.8rem;
+}
+
+/* title bar */
+#term-titlebar {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .75rem 1.1rem;
+  background: var(--dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.tc { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.tc-r { background: #ff5f57; }
+.tc-y { background: #febc2e; }
+.tc-g { background: #28c840; }
+
+#term-title {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 3.6rem;
+}
+
+/* body */
+#term-body {
+  padding: 1.8rem 2rem 2rem;
+}
+
+#term-hint {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 1.8rem;
+  line-height: 2;
+}
+
+#term-hint .hl { color: var(--accent); }
+
+#term-output {
+  min-height: 4px;
+  margin-bottom: 1.2rem;
+}
+
+/* input row */
+.irow {
+  display: flex;
+  align-items: center;
+}
+
+.pr {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-right: .55rem;
+  font-size: 14px;
+  white-space: nowrap;
+  user-select: none;
+}
+
+#cmd {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 14px;
+  flex: 1;
+  caret-color: var(--accent);
+  -webkit-appearance: none;
+}
+
+/* ── Terminal output elements ─────────────────────────────── */
+.tree-row {
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+  padding: .2rem 0;
+  font-size: 14px;
+}
+
+.br  { color: var(--dim); user-select: none; flex-shrink: 0; }
+.dn  { color: var(--fg); }
+.fn  { color: var(--muted); }
+.xn  { color: var(--accent); }
+.nt  { color: var(--muted); font-size: 12px; }
+
+.sh {
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.proj-item {
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.proj-item:last-child { border-bottom: none; }
+
+.proj-top {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .3rem;
+}
+
+.pname { color: var(--fg); font-size: 14px; }
+.plang { color: var(--muted); font-size: 12px; align-self: center; }
+.pdesc { color: var(--muted); font-size: 13px; line-height: 1.75; }
+
+/* blog list in terminal */
+.blog-item {
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.blog-item:last-child { border-bottom: none; }
+.blog-top {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .25rem;
+}
+.bname { color: var(--fg); font-size: 14px; }
+.bdate { color: var(--muted); font-size: 12px; white-space: nowrap; align-self: center; }
+.bdesc { color: var(--muted); font-size: 13px; line-height: 1.75; }
+.btags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .4rem; }
+.btag  {
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 1px 8px;
+  border-radius: 2px;
+  letter-spacing: .04em;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .5rem 3rem;
+  font-size: 14px;
+}
+
+.kk  { color: var(--accent); }
+.kvv { color: var(--muted); }
+
+.dump-sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.2rem 0;
+}
+
+.dump-lbl {
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.dump-lbl em { color: var(--accent); font-style: normal; }
+
+.t-err { color: var(--muted); font-size: 13px; }
+.t-err span { color: #e06464; }
+.t-hint { color: var(--accent); }
+
+.t-ok { color: var(--muted); font-size: 13px; line-height: 2.4; }
+
+.blog-soon { font-size: 13px; color: var(--muted); font-style: italic; }
+
+/* post body view */
+.post-view { max-width: 580px; }
+.post-view .post-title { color: var(--fg); font-size: 15px; margin-bottom: .5rem; line-height: 1.45; }
+.post-view .post-meta  { color: var(--muted); font-size: 12px; margin-bottom: 1.2rem; }
+.post-view .post-body  { color: var(--muted); font-size: 13px; line-height: 1.85; }
+
+/* ── Connect links ────────────────────────────────────────── */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .8rem;
+}
+
+.lnk {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  padding: 6px 18px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  transition: color .15s, border-color .15s, background .15s;
+  letter-spacing: .04em;
+}
+
+.lnk:hover {
+  color: var(--fg);
+  border-color: var(--accent);
+  background: var(--glow);
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+#site-footer {
+  margin-top: 6rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+
+#site-footer a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .15s;
+}
+
+#site-footer a:hover { color: var(--fg); }
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 560px) {
+  #pg { padding: 3rem 1.4rem 5rem; }
+  #hero h1 { font-size: 1.6rem; }
+  #term-body { padding: 1.2rem 1.2rem 1.4rem; }
+  .kv { gap: .4rem 1.8rem; }
+}
 </style>
 </head>
 <body>
 <div id="pg">
 
-  <h1>hi, i'm saankhya srikanth.</h1>
-    <h2>what i'm into</h2>
-  <p>CSE student at PESU ECC, Bengaluru. I like understanding how things work at a low level like how an OS isolates processes, how data is actually stored, how distributed systems stay consistent when things break.</p>
-  <p>Right now I'm exploring systems engineering, container internals and cybersecurity. Also learning Rust because apparently I enjoy pain.</p>
+  <!-- Status bar -->
+  <div id="statusbar">
+    <span class="bar-path">saankhya srikanth</span>
+    <span class="bar-sep">/</span>
+    <span>PESU ECC &middot; Bengaluru</span>
+  </div>
 
-
-  <h2>what i'm writing?</h2>
-  <p>Starting to write about things while I'm figuring out  systems, security, whatever I'm breaking at the time. Nothing here yet but check back soon.</p>
-
- 
-
-  <hr>
-
-  <div id="term-wrap">
-    <div id="term-hint">oh wait there's a terminal here too.<br>type <span>dir</span> to look around, or <span>cat all</span> if you just want to see everything at once.</div>
-    <div id="term-output"></div>
-    <div class="irow">
-      <span class="pr" id="pr">visitor@void:~$ </span>
-      <input id="cmd" type="text" autocomplete="off" spellcheck="false">
+  <!-- Hero -->
+  <div id="hero">
+    <h1>hi, i'm saankhya srikanth.</h1>
+    <div class="tagline">
+      <p>CSE student at PESU ECC, Bengaluru. I like understanding how things work at a low level like how an OS isolates processes, how data is actually stored, how distributed systems stay consistent when things break.</p>
+      <p>Right now I'm exploring systems engineering, container internals and cybersecurity. Also learning Rust because apparently I enjoy pain.</p>
     </div>
   </div>
 
-   <h2>connect</h2>
-  <p>Happy to connect and collaborate.</p>
+  <!-- Writing -->
+  <div class="sec-label">writing</div>
+  <div class="prose">
+    <p>Starting to write about things while I'm figuring out systems, security, whatever I'm breaking at the time. Nothing here yet but check back soon.</p>
+  </div>
+
+  <hr class="sep"/>
+
+  <!-- Terminal -->
+  <div class="sec-label">terminal</div>
+
+  <div id="term-card">
+    <div id="term-titlebar">
+      <span class="tc tc-r"></span>
+      <span class="tc tc-y"></span>
+      <span class="tc tc-g"></span>
+      <span id="term-title">visitor@void — bash</span>
+    </div>
+    <div id="term-body">
+      <div id="term-hint">
+        type <span class="hl">dir</span> to look around, or <span class="hl">cat all</span> to see everything at once.<br>
+        <span class="hl">help</span> for the full command list.
+      </div>
+      <div id="term-output"></div>
+      <div class="irow">
+        <span class="pr" id="pr">visitor@void:~$ </span>
+        <input id="cmd" type="text" autocomplete="off" spellcheck="false" aria-label="terminal input"/>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep"/>
+
+  <!-- Connect -->
+  <div class="sec-label">connect</div>
+  <div class="prose">
+    <p>Happy to connect and collaborate.</p>
+  </div>
   <div class="links">
-    <a class="lnk" href="https://github.com/SaankLeo" target="_blank">github</a>
-    <a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank">leetcode</a>
-    <a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank">linkedin</a>
+    <a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>
+    <a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>
+    <a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>
     <a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>
   </div>
-<div style="margin-top:5rem;color:var(--muted);font-size:13px">
-  Rendered using anna.
-</div>
-</div>
+
+  <!-- Footer -->
+  <div id="site-footer">
+    <span>rendered with anna</span>
+    <span>2026</span>
+  </div>
+
+</div><!-- #pg -->
+
 <script>
+/* ─── Projects ─────────────────────────────────────────── */
 var P=[
   {n:"Mocker",l:"C / Go",d:"Container runtime from scratch &#8212; namespace isolation, cgroups, process containment. Grew out of Potato CPU, a custom x86-style emulator with registers, memory management, and a fetch-decode-execute pipeline."},
   {n:"RadFS",l:"AIEP",d:"FUSE-based userspace filesystem. Adaptive radix tree indexing for efficient path resolution. Prefix compression to cut memory overhead."},
@@ -96,12 +462,61 @@ var P=[
   {n:"Algorithm Optimization",l:"Python",d:"A* search and Q-learning for pathfinding and decision-making. Heuristic performance evaluation and time-space trade-off analysis."}
 ];
 
+/* ─── Blog posts ────────────────────────────────────────── */
+var POSTS=[
+  {
+    slug:"mocker",
+    n:"Building Mocker: What I Learned Writing a CPU Emulator",
+    date:"Jun 2025",
+    desc:"Notes on building a CPU emulator from scratch in C++ &#8212; registers, pipelines, and the weird gaps in my understanding.",
+    tags:["systems","C++","emulation"],
+    body:"<em>Coming soon.</em> This post is still being written &#8212; check back shortly."
+  }
+];
+
+/* ─── Renderers ─────────────────────────────────────────── */
 function projList(){
   var o='<div class="sh">projects</div>';
-  for(var i=0;i<P.length;i++) o+='<div class="proj-item"><div class="proj-top"><span class="pname">'+P[i].n+'</span><span class="plang">'+P[i].l+'</span></div><div class="pdesc">'+P[i].d+'</div></div>';
+  for(var i=0;i<P.length;i++)
+    o+='<div class="proj-item"><div class="proj-top"><span class="pname">'+P[i].n+'</span><span class="plang">'+P[i].l+'</span></div><div class="pdesc">'+P[i].d+'</div></div>';
   return o;
 }
 
+function blogList(){
+  if(!POSTS.length) return '<div class="sh">writing</div><div class="blog-soon">nothing here yet &#8212; but soon.</div>';
+  var o='<div class="sh">writing</div>';
+  for(var i=0;i<POSTS.length;i++){
+    var p=POSTS[i];
+    var tags='';
+    for(var t=0;t<p.tags.length;t++) tags+='<span class="btag">'+p.tags[t]+'</span>';
+    o+='<div class="blog-item">'+
+       '<div class="blog-top"><span class="bname">'+p.n+'</span><span class="bdate">'+p.date+'</span></div>'+
+       '<div class="bdesc">'+p.desc+'</div>'+
+       (tags?'<div class="btags">'+tags+'</div>':'')+
+       '</div>';
+  }
+  o+='<div style="margin-top:.9rem;font-size:12px;color:var(--muted)">tip: <span style="color:var(--accent)">cat mocker-post</span> to read</div>';
+  return o;
+}
+
+function blogPost(slug){
+  for(var i=0;i<POSTS.length;i++){
+    if(POSTS[i].slug===slug){
+      var p=POSTS[i];
+      var tags='';
+      for(var t=0;t<p.tags.length;t++) tags+='<span class="btag">'+p.tags[t]+'</span>';
+      return '<div class="post-view">'+
+             '<div class="sh">writing / '+p.slug+'</div>'+
+             '<div class="post-title">'+p.n+'</div>'+
+             '<div class="post-meta">'+p.date+(p.tags.length?' &middot; ':'')+(tags?'<span class="btags" style="display:inline-flex;margin:0 0 0 .3rem">'+tags+'</span>':'')+'</div>'+
+             '<div class="post-body">'+p.body+'</div>'+
+             '</div>';
+    }
+  }
+  return null;
+}
+
+/* ─── Pages ─────────────────────────────────────────────── */
 var PAGES={
   "~/dir":function(){
     return '<div class="tree-row"><span class="br">.</span></div>'+
@@ -111,8 +526,9 @@ var PAGES={
     '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9500;&#9472;&#9472;</span><span class="fn">RadFS</span><span class="nt">&nbsp;userspace filesystem</span></div>'+
     '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9500;&#9472;&#9472;</span><span class="fn">How I Met Your Password</span><span class="nt">&nbsp;security</span></div>'+
     '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9492;&#9472;&#9472;</span><span class="fn">Algorithm Optimization</span><span class="nt">&nbsp;A* &middot; Q-learning</span></div>'+
+    '<div class="tree-row"><span class="br">&#9500;&#9472;&#9472;</span><span class="dn">writing/</span></div>'+
+    '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9492;&#9472;&#9472;</span><span class="fn">mocker-cpu-emulator.md</span><span class="nt">&nbsp;[draft]</span></div>'+
     '<div class="tree-row"><span class="br">&#9500;&#9472;&#9472;</span><span class="dn">skills/</span></div>'+
-    '<div class="tree-row"><span class="br">&#9500;&#9472;&#9472;</span><span class="dn">blogs/</span></div>'+
     '<div class="tree-row"><span class="br">&#9492;&#9472;&#9472;</span><span class="fn">contact.md</span></div>';
   },
   "~/projects":projList,
@@ -121,6 +537,8 @@ var PAGES={
   "~/projects/radfs":function(){return '<div class="sh">RadFS</div><div class="pdesc" style="font-size:13px;line-height:1.8">FUSE-based userspace filesystem implementing core VFS operations. Adaptive radix tree indexing for efficient path resolution. Prefix compression to reduce memory overhead. Built collaboratively as part of the AIEP program.</div>';},
   "~/projects/hibp":function(){return '<div class="sh">How I Met Your Password</div><div class="pdesc" style="font-size:13px;line-height:1.8">A lightweight local security dashboard. Password breach checks via the Have I Been Pwned API, OSINT lookups, and local port scanning. Runs entirely locally &#8212; no cloud dependencies, no external data storage.</div>';},
   "~/projects/algo":function(){return '<div class="sh">Algorithm Optimization</div><div class="pdesc" style="font-size:13px;line-height:1.8">A* search and Q-learning for pathfinding and decision-making. Heuristic performance evaluation and time-space trade-off analysis.</div>';},
+  "~/writing":blogList,
+  "~/writing/mocker":function(){ return blogPost("mocker"); },
   "~/skills":function(){
     return '<div class="sh">stack</div><div class="kv">'+
     '<span class="kk">languages</span><span class="kvv">C++ &middot; Python &middot; Go &middot; C &middot; C# &middot; SQL &middot; Rust (learning)</span>'+
@@ -130,25 +548,26 @@ var PAGES={
     '<span class="kk">clubs</span><span class="kvv">Layer 8 &middot; ACM PESU (webmaster) &middot; HSP &middot; QQC</span>'+
     '</div>';
   },
-  "~/blogs":function(){return '<div class="sh">blogs</div><div class="blog-soon">nothing here yet &#8212; but soon.</div>';},
   "~/contact":function(){
     return '<div class="sh">contact</div><div class="links">'+
-    '<a class="lnk" href="https://github.com/SaankLeo" target="_blank">github</a>'+
-    '<a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank">leetcode</a>'+
-    '<a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank">linkedin</a>'+
+    '<a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>'+
+    '<a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>'+
+    '<a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>'+
     '<a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>'+
     '</div>';
   }
 };
 
 function allPage(){
-  return '<div style="margin-bottom:1.8rem"><div class="dump-lbl">&#8212; <em>whoami</em> &#8212;</div>'+
+  return '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>whoami</em> &#8212;</div>'+
   '<div style="color:var(--fg);margin-bottom:.5rem">Saankhya Srikanth</div>'+
-  '<div style="color:var(--muted);font-size:13px;line-height:1.9">CSE student at PESU ECC, Bengaluru.<br>Exploring systems engineering, distributed systems, and cybersecurity.<br>Into container internals, isolation primitives, and reliability at scale. Learning Rust.</div></div>'+
+  '<div style="color:var(--muted);font-size:13px;line-height:2">CSE student at PESU ECC, Bengaluru.<br>Exploring systems engineering, distributed systems, and cybersecurity.<br>Into container internals, isolation primitives, and reliability at scale. Learning Rust.</div></div>'+
   '<div class="dump-sep"></div>'+
-  '<div style="margin-bottom:1.8rem"><div class="dump-lbl">&#8212; <em>projects/</em> &#8212;</div>'+projList()+'</div>'+
+  '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>projects/</em> &#8212;</div>'+projList()+'</div>'+
   '<div class="dump-sep"></div>'+
-  '<div style="margin-bottom:1.8rem"><div class="dump-lbl">&#8212; <em>skills/</em> &#8212;</div>'+
+  '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>writing/</em> &#8212;</div>'+blogList()+'</div>'+
+  '<div class="dump-sep"></div>'+
+  '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>skills/</em> &#8212;</div>'+
   '<div class="kv">'+
   '<span class="kk">languages</span><span class="kvv">C++ &middot; Python &middot; Go &middot; C &middot; C# &middot; SQL &middot; Rust (learning)</span>'+
   '<span class="kk">security</span><span class="kvv">OSINT &middot; reverse engineering &middot; vulnerability research</span>'+
@@ -157,59 +576,86 @@ function allPage(){
   '<span class="kk">clubs</span><span class="kvv">Layer 8 &middot; ACM PESU (webmaster) &middot; HSP &middot; QQC</span>'+
   '</div></div>'+
   '<div class="dump-sep"></div>'+
-  '<div style="margin-bottom:1.8rem"><div class="dump-lbl">&#8212; <em>blogs/</em> &#8212;</div><div class="blog-soon">nothing here yet &#8212; but soon.</div></div>'+
-  '<div class="dump-sep"></div>'+
   '<div><div class="dump-lbl">&#8212; <em>contact.md</em> &#8212;</div>'+
   '<div class="links">'+
-  '<a class="lnk" href="https://github.com/SaankLeo" target="_blank">github</a>'+
-  '<a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank">leetcode</a>'+
-  '<a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank">linkedin</a>'+
+  '<a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>'+
+  '<a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>'+
+  '<a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>'+
   '<a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>'+
   '</div></div>';
 }
 
+/* ─── Command map ───────────────────────────────────────── */
 var MAP={
-  "dir":"~/dir","ls":"~/dir",
-  "cd projects":"~/projects","projects":"~/projects","cat projects":"~/projects",
+  "dir":"~/dir","ls":"~/dir","ls -la":"~/dir",
+  "cd projects":"~/projects","projects":"~/projects","cat projects":"~/projects","ls projects":"~/projects",
   "cat frame":"~/projects/frame","cd projects/frame":"~/projects/frame",
   "cat mocker":"~/projects/mocker","cd projects/mocker":"~/projects/mocker",
   "cat radfs":"~/projects/radfs","cd projects/radfs":"~/projects/radfs",
   "cat hibp":"~/projects/hibp","cat how i met your password":"~/projects/hibp","cd projects/hibp":"~/projects/hibp",
   "cat algo":"~/projects/algo","cat algorithm optimization":"~/projects/algo","cd projects/algo":"~/projects/algo",
-  "cd skills":"~/skills","cat skills":"~/skills",
-  "cd blogs":"~/blogs","cat blogs":"~/blogs",
+  "cd writing":"~/writing","cat writing":"~/writing","ls writing":"~/writing",
+  "cd blogs":"~/writing","cat blogs":"~/writing","ls blogs":"~/writing",
+  "cat mocker-post":"~/writing/mocker","cat mocker-cpu-emulator":"~/writing/mocker","cd writing/mocker":"~/writing/mocker",
+  "cd skills":"~/skills","cat skills":"~/skills","ls skills":"~/skills",
   "cat contact.md":"~/contact","cat contact":"~/contact","contact":"~/contact",
   "clear":"__clear__","cd ~":"__home__","cd":"__home__","cd ..":"__up__","..":"__up__"
 };
 
+/* ─── Runtime ───────────────────────────────────────────── */
 var cur="~";
-function getPrompt(){return "visitor@void:"+cur+"$ ";}
-function set(h){document.getElementById("term-output").innerHTML=h;}
+function getPrompt(){ return "visitor@void:"+cur+"$ "; }
+function set(h){ document.getElementById("term-output").innerHTML=h; }
 
 function go(to){
-  if(!PAGES[to]){set('<div class="t-err">no such file: <span>'+to.replace("~/","")+'</span> &#8212; try <span>dir</span></div>');return;}
-  cur=to;set(PAGES[to]());document.getElementById("pr").textContent=getPrompt();
+  if(!PAGES[to]){
+    set('<div class="t-err">no such file: <span>'+to.replace("~/","")+'</span> &#8212; try <span class="t-hint">dir</span></div>');
+    return;
+  }
+  cur=to;
+  set(PAGES[to]());
+  document.getElementById("pr").textContent=getPrompt();
 }
 
 var inp=document.getElementById("cmd");
 inp.addEventListener("keydown",function(e){
-  if(e.key!=="Enter")return;
-  var v=inp.value.trim();inp.value="";
-  if(!v)return;
+  if(e.key!=="Enter") return;
+  var v=inp.value.trim(); inp.value="";
+  if(!v) return;
   var low=v.toLowerCase().replace(/\s+/g," ").replace(/\/$/,"");
-  if(low==="cat all"){cur="~";set(allPage());document.getElementById("pr").textContent=getPrompt();return;}
-  if(low==="clear"){cur="~";set("");document.getElementById("pr").textContent=getPrompt();return;}
-  if(low==="cd ~"||low==="cd"||low==="home"){cur="~";set("");document.getElementById("pr").textContent=getPrompt();return;}
-  if(low==="cd .."||low===".."){var p=cur.split("/");cur=p.length>1?p.slice(0,-1).join("/"):"~";set("");document.getElementById("pr").textContent=getPrompt();return;}
-  if(low==="help"){set('<div class="t-ok">dir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; list files<br>cat all &nbsp;&nbsp;&nbsp;&nbsp;&#8212; view entire site<br>cd &lt;folder&gt; &#8212; go into folder<br>cat &lt;file&gt; &nbsp;&#8212; open a file<br>cd .. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; go back</div>');return;}
-  if(MAP[low]){go(MAP[low]);return;}
-  var strip=low.replace(/^(cd |cat )/,"").replace(/\.md$/,"").replace(/\.cpp$/,"").replace(/\.py$/,"");
-  if(PAGES["~/"+strip]){go("~/"+strip);return;}
-  if(PAGES["~/projects/"+strip]){go("~/projects/"+strip);return;}
-  set('<div class="t-err">command not found: <span>'+v+'</span> &#8212; type <span>help</span></div>');
+
+  if(low==="cat all"){ cur="~"; set(allPage()); document.getElementById("pr").textContent=getPrompt(); return; }
+  if(low==="clear"){   cur="~"; set("");         document.getElementById("pr").textContent=getPrompt(); return; }
+  if(low==="cd ~"||low==="cd"||low==="home"){ cur="~"; set(""); document.getElementById("pr").textContent=getPrompt(); return; }
+  if(low==="cd .."||low===".."){ var p=cur.split("/"); cur=p.length>1?p.slice(0,-1).join("/"):"~"; set(""); document.getElementById("pr").textContent=getPrompt(); return; }
+  if(low==="help"){
+    set('<div class="t-ok">'+
+    'dir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; list all files &amp; folders<br>'+
+    'cat all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; dump entire site<br>'+
+    'cd &lt;folder&gt;&nbsp;&nbsp;&#8212; navigate into folder<br>'+
+    'cat &lt;file&gt;&nbsp;&nbsp;&nbsp;&#8212; read a file<br>'+
+    'cd ..&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; go back<br>'+
+    'clear&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; clear terminal<br><br>'+
+    '<span style="color:var(--accent)">writing commands:</span><br>'+
+    'cd writing&nbsp;&nbsp;&nbsp;&#8212; list posts<br>'+
+    'cat mocker-post &#8212; read cpu emulator post'+
+    '</div>');
+    return;
+  }
+
+  if(MAP[low]){ go(MAP[low]); return; }
+
+  var strip=low.replace(/^(cd |cat |ls )/,"").replace(/\.md$/,"").replace(/\.cpp$/,"").replace(/\.py$/,"");
+  if(PAGES["~/"+strip]){ go("~/"+strip); return; }
+  if(PAGES["~/projects/"+strip]){ go("~/projects/"+strip); return; }
+  if(PAGES["~/writing/"+strip]){ go("~/writing/"+strip); return; }
+
+  set('<div class="t-err">command not found: <span>'+v+'</span> &#8212; type <span class="t-hint">help</span></div>');
 });
 
-document.getElementById("pg").addEventListener("click",function(e){if(!e.target.closest("a"))inp.focus();});
+document.getElementById("pg").addEventListener("click",function(e){
+  if(!e.target.closest("a")) inp.focus();
+});
 </script>
 </body>
 </html>
