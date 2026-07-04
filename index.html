@@ -321,6 +321,165 @@ html, body {
 .post-view .post-meta  { color: var(--muted); font-size: 13px; margin-bottom: 1.3rem; }
 .post-view .post-body  { color: var(--muted); font-size: 14px; line-height: 1.85; }
 
+/* ── Writing feed ───────────────────────────────────────── */
+.post-feed {
+  display: grid;
+  gap: 1rem;
+  margin-top: .6rem;
+  max-width: 760px;
+}
+
+.post-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  background: rgba(255,255,255,.015);
+  transition: border-color .15s, background .15s, transform .15s;
+}
+
+.post-card:hover {
+  border-color: var(--accent);
+  background: rgba(201, 165, 90, 0.05);
+  transform: translateY(-1px);
+}
+
+.post-card-link {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.post-card-title {
+  color: var(--fg);
+  font-size: 16px;
+  margin-bottom: .35rem;
+  line-height: 1.45;
+}
+
+.post-card-meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: .55rem;
+}
+
+.post-card-desc {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.post-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-top: .65rem;
+}
+
+.post-card-tag {
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: .04em;
+}
+
+.post-shell {
+  max-width: 760px;
+  padding: 0.2rem 0 0.4rem;
+}
+
+.post-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: 1.4rem;
+}
+
+.post-kicker {
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .85rem;
+  font-weight: 700;
+}
+
+.post-article {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.4rem 1.4rem 1.6rem;
+  background: rgba(255,255,255,.015);
+}
+
+.post-article .post-title {
+  color: var(--fg);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  margin-bottom: .6rem;
+  line-height: 1.35;
+}
+
+.post-article .post-meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 1.2rem;
+}
+
+.post-article .post-body {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.95;
+}
+
+.post-article .post-body p,
+.post-article .post-body ul,
+.post-article .post-body ol,
+.post-article .post-body pre,
+.post-article .post-body figure {
+  margin-bottom: 1.2rem;
+}
+
+.post-article .post-body h1,
+.post-article .post-body h2,
+.post-article .post-body h3 {
+  color: var(--fg);
+  margin: 1.4rem 0 .6rem;
+  line-height: 1.35;
+  font-size: 1rem;
+}
+
+.post-article .post-body pre {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow-x: auto;
+  background: rgba(255,255,255,.02);
+}
+
+.post-article .post-body code {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.post-article .post-body img {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+/* ── Route shell ─────────────────────────────────────────── */
+body.route-page #home-shell {
+  display: none;
+}
+
+body.route-page #route-shell {
+  display: block;
+}
+
+#route-shell {
+  display: none;
+}
+
 /* ── Connect links ────────────────────────────────────────── */
 .links {
   display: flex;
@@ -382,280 +541,56 @@ html, body {
 </head>
 <body>
 <div id="pg">
-
-  <!-- Status bar -->
-  <div id="statusbar">
-    <span class="bar-path">saankhya srikanth</span>
-    <span class="bar-sep">/</span>
-    <span>PESU ECC &middot; Bengaluru</span>
-  </div>
-
-  <!-- Hero -->
-  <div id="hero">
-    <h1>hi, i'm saankhya </h1>
-    <div class="tagline">
-      <p>CSE student at PESU ECC, Bengaluru. I like understanding how things work at a low level like how an OS isolates processes, how data is actually stored, how distributed systems stay consistent when things break.</p>
-      <p>Right now I'm exploring systems engineering, container internals and cybersecurity. Also learning Rust because apparently I enjoy pain.</p>
+  <div id="home-shell">
+    <!-- Status bar -->
+    <div id="statusbar">
+      <span class="bar-path">saankhya srikanth</span>
+      <span class="bar-sep">/</span>
+      <span>PESU ECC &middot; Bengaluru</span>
     </div>
-  </div>
 
-  <!-- Writing -->
-  <div class="sec-label">writing</div>
-  <div class="prose">
-    <p>Starting to write about things while I'm figuring out systems, security, whatever I'm breaking at the time. Nothing here yet but check back soon.</p>
-  </div>
-
-  <hr class="sep"/>
-
-  <!-- Terminal -->
-  <div class="sec-label">terminal</div>
-
-  <div id="term-card">
-    <div id="term-titlebar">
-      <span class="tc tc-r"></span>
-      <span class="tc tc-y"></span>
-      <span class="tc tc-g"></span>
-      <span id="term-title">visitor@void — bash</span>
-    </div>
-    <div id="term-body">
-      <div id="term-hint">
-        type <span class="hl">dir</span> to look around, or <span class="hl">cat all</span> to see everything at once.<br>
-        <span class="hl">help</span> for the full command list.
-      </div>
-      <div id="term-output"></div>
-      <div class="irow">
-        <span class="pr" id="pr">visitor@void:~$ </span>
-        <input id="cmd" type="text" autocomplete="off" spellcheck="false" aria-label="terminal input"/>
+    <!-- Hero -->
+    <div id="hero">
+      <h1>hi, i'm saankhya </h1>
+      <div class="tagline">
+        <p>CSE student at PESU ECC, Bengaluru. I like understanding how things work at a low level like how an OS isolates processes, how data is actually stored, how distributed systems stay consistent when things break.</p>
+        <p>Right now I'm exploring systems engineering, container internals and cybersecurity. Also learning Rust because apparently I enjoy pain.</p>
       </div>
     </div>
+
+    <!-- Blog -->
+    <div class="sec-label">blog</div>
+    <div class="prose">
+      <p>I write about systems, emulation, and the strange projects that keep turning into full-stack operating systems.</p>
+      <p><a class="lnk" href="/blog" data-route="/blog">open blog</a></p>
+    </div>
+    <div id="writing-feed" class="post-feed"></div>
+
+    <hr class="sep"/>
+
+    <!-- Connect -->
+    <div class="sec-label">connect</div>
+    <div class="prose">
+      <p>Happy to connect and collaborate.</p>
+    </div>
+    <div class="links">
+      <a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>
+      <a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>
+      <a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>
+      <a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>
+    </div>
+
+    <!-- Footer -->
+    <div id="site-footer">
+      <span>rendered with anna</span>
+      <span>2026</span>
+    </div>
   </div>
 
-  <hr class="sep"/>
-
-  <!-- Connect -->
-  <div class="sec-label">connect</div>
-  <div class="prose">
-    <p>Happy to connect and collaborate.</p>
-  </div>
-  <div class="links">
-    <a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>
-    <a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>
-    <a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>
-    <a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>
-  </div>
-
-  <!-- Footer -->
-  <div id="site-footer">
-    <span>rendered with anna</span>
-    <span>2026</span>
-  </div>
-
+  <div id="route-shell"></div>
 </div><!-- #pg -->
 
-<script>
-/* ─── Projects ─────────────────────────────────────────── */
-var P=[
-  {n:"Mocker",l:"C / Go",d:"Container runtime from scratch &#8212; namespace isolation, cgroups, process containment. Grew out of Potato CPU, a custom x86-style emulator with registers, memory management, and a fetch-decode-execute pipeline."},
-  {n:"RadFS",l:"AIEP",d:"FUSE-based userspace filesystem. Adaptive radix tree indexing for efficient path resolution. Prefix compression to cut memory overhead."},
-  {n:"Frame",l:"founding team",d:"Node-based workflow editor for media generation pipelines. Orchestration systems, deployment automation, cloud infrastructure."},
-  {n:"How I Met Your Password",l:"Flask + JS",d:"Local security dashboard &#8212; breach checks via Have I Been Pwned API, OSINT lookups, local port scanning. No cloud, no external storage."},
-  {n:"Algorithm Optimization",l:"Python",d:"A* search and Q-learning for pathfinding and decision-making. Heuristic performance evaluation and time-space trade-off analysis."}
-];
-
-/* ─── Blog posts ────────────────────────────────────────── */
-var POSTS=[
-  {
-    slug:"mocker",
-    n:"Building Mocker: What I Learned Writing a CPU Emulator",
-    date:"Jun 2025",
-    desc:"Notes on building a CPU emulator from scratch in C++ &#8212; registers, pipelines, and the weird gaps in my understanding.",
-    tags:["systems","C++","emulation"],
-    body:"<em>Coming soon.</em> This post is still being written &#8212; check back shortly."
-  }
-];
-
-/* ─── Renderers ─────────────────────────────────────────── */
-function projList(){
-  var o='<div class="sh">projects</div>';
-  for(var i=0;i<P.length;i++)
-    o+='<div class="proj-item"><div class="proj-top"><span class="pname">'+P[i].n+'</span><span class="plang">'+P[i].l+'</span></div><div class="pdesc">'+P[i].d+'</div></div>';
-  return o;
-}
-
-function blogList(){
-  if(!POSTS.length) return '<div class="sh">writing</div><div class="blog-soon">nothing here yet &#8212; but soon.</div>';
-  var o='<div class="sh">writing</div>';
-  for(var i=0;i<POSTS.length;i++){
-    var p=POSTS[i];
-    var tags='';
-    for(var t=0;t<p.tags.length;t++) tags+='<span class="btag">'+p.tags[t]+'</span>';
-    o+='<div class="blog-item">'+
-       '<div class="blog-top"><span class="bname">'+p.n+'</span><span class="bdate">'+p.date+'</span></div>'+
-       '<div class="bdesc">'+p.desc+'</div>'+
-       (tags?'<div class="btags">'+tags+'</div>':'')+
-       '</div>';
-  }
-  o+='<div style="margin-top:.9rem;font-size:12px;color:var(--muted)">tip: <span style="color:var(--accent)">cat mocker-post</span> to read</div>';
-  return o;
-}
-
-function blogPost(slug){
-  for(var i=0;i<POSTS.length;i++){
-    if(POSTS[i].slug===slug){
-      var p=POSTS[i];
-      var tags='';
-      for(var t=0;t<p.tags.length;t++) tags+='<span class="btag">'+p.tags[t]+'</span>';
-      return '<div class="post-view">'+
-             '<div class="sh">writing / '+p.slug+'</div>'+
-             '<div class="post-title">'+p.n+'</div>'+
-             '<div class="post-meta">'+p.date+(p.tags.length?' &middot; ':'')+(tags?'<span class="btags" style="display:inline-flex;margin:0 0 0 .3rem">'+tags+'</span>':'')+'</div>'+
-             '<div class="post-body">'+p.body+'</div>'+
-             '</div>';
-    }
-  }
-  return null;
-}
-
-/* ─── Pages ─────────────────────────────────────────────── */
-var PAGES={
-  "~/dir":function(){
-    return '<div class="tree-row"><span class="br">.</span></div>'+
-    '<div class="tree-row"><span class="br">&#9500;&#9472;&#9472;</span><span class="dn">projects/</span></div>'+
-    '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9500;&#9472;&#9472;</span><span class="xn">Frame</span><span class="nt">&nbsp;founding team</span></div>'+
-    '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9500;&#9472;&#9472;</span><span class="fn">Mocker</span><span class="nt">&nbsp;container runtime</span></div>'+
-    '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9500;&#9472;&#9472;</span><span class="fn">RadFS</span><span class="nt">&nbsp;userspace filesystem</span></div>'+
-    '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9500;&#9472;&#9472;</span><span class="fn">How I Met Your Password</span><span class="nt">&nbsp;security</span></div>'+
-    '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9492;&#9472;&#9472;</span><span class="fn">Algorithm Optimization</span><span class="nt">&nbsp;A* &middot; Q-learning</span></div>'+
-    '<div class="tree-row"><span class="br">&#9500;&#9472;&#9472;</span><span class="dn">writing/</span></div>'+
-    '<div class="tree-row"><span class="br">&#9474;&nbsp;&nbsp;&#9492;&#9472;&#9472;</span><span class="fn">mocker-cpu-emulator.md</span><span class="nt">&nbsp;[draft]</span></div>'+
-    '<div class="tree-row"><span class="br">&#9500;&#9472;&#9472;</span><span class="dn">skills/</span></div>'+
-    '<div class="tree-row"><span class="br">&#9492;&#9472;&#9472;</span><span class="fn">contact.md</span></div>';
-  },
-  "~/projects":projList,
-  "~/projects/frame":function(){return '<div class="sh">Frame</div><div class="pdesc" style="font-size:13px;line-height:1.8">Node-based workflow editor for media generation and processing pipelines. Built orchestration systems connecting editor workflows, asset processing, and generation services. Deployment automation and cloud infrastructure setup.</div>';},
-  "~/projects/mocker":function(){return '<div class="sh">Mocker</div><div class="pdesc" style="font-size:13px;line-height:1.8">Building a container runtime from scratch. Namespace isolation, cgroups, and process containment &#8212; understanding how Docker-style isolation actually works under the hood.<br><br>Grew out of Potato CPU, a custom x86-style emulator with registers, memory management, stack operations, and a fetch-decode-execute pipeline.</div>';},
-  "~/projects/radfs":function(){return '<div class="sh">RadFS</div><div class="pdesc" style="font-size:13px;line-height:1.8">FUSE-based userspace filesystem implementing core VFS operations. Adaptive radix tree indexing for efficient path resolution. Prefix compression to reduce memory overhead. Built collaboratively as part of the AIEP program.</div>';},
-  "~/projects/hibp":function(){return '<div class="sh">How I Met Your Password</div><div class="pdesc" style="font-size:13px;line-height:1.8">A lightweight local security dashboard. Password breach checks via the Have I Been Pwned API, OSINT lookups, and local port scanning. Runs entirely locally &#8212; no cloud dependencies, no external data storage.</div>';},
-  "~/projects/algo":function(){return '<div class="sh">Algorithm Optimization</div><div class="pdesc" style="font-size:13px;line-height:1.8">A* search and Q-learning for pathfinding and decision-making. Heuristic performance evaluation and time-space trade-off analysis.</div>';},
-  "~/writing":blogList,
-  "~/writing/mocker":function(){ return blogPost("mocker"); },
-  "~/skills":function(){
-    return '<div class="sh">stack</div><div class="kv">'+
-    '<span class="kk">languages</span><span class="kvv">C++ &middot; Python &middot; Go &middot; C &middot; C# &middot; SQL &middot; Rust (learning)</span>'+
-    '<span class="kk">security</span><span class="kvv">OSINT &middot; reverse engineering &middot; vulnerability research</span>'+
-    '<span class="kk">systems</span><span class="kvv">Linux &middot; memory management &middot; Docker &middot; networking</span>'+
-    '<span class="kk">tools</span><span class="kvv">Git &middot; Linux CLI &middot; FastAPI &middot; Flask</span>'+
-    '<span class="kk">clubs</span><span class="kvv">Layer 8 &middot; ACM PESU (webmaster) &middot; HSP &middot; QQC</span>'+
-    '</div>';
-  },
-  "~/contact":function(){
-    return '<div class="sh">contact</div><div class="links">'+
-    '<a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>'+
-    '<a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>'+
-    '<a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>'+
-    '<a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>'+
-    '</div>';
-  }
-};
-
-function allPage(){
-  return '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>whoami</em> &#8212;</div>'+
-  '<div style="color:var(--fg);margin-bottom:.5rem">Saankhya Srikanth</div>'+
-  '<div style="color:var(--muted);font-size:13px;line-height:2">CSE student at PESU ECC, Bengaluru.<br>Exploring systems engineering, distributed systems, and cybersecurity.<br>Into container internals, isolation primitives, and reliability at scale. Learning Rust.</div></div>'+
-  '<div class="dump-sep"></div>'+
-  '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>projects/</em> &#8212;</div>'+projList()+'</div>'+
-  '<div class="dump-sep"></div>'+
-  '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>writing/</em> &#8212;</div>'+blogList()+'</div>'+
-  '<div class="dump-sep"></div>'+
-  '<div style="margin-bottom:2rem"><div class="dump-lbl">&#8212; <em>skills/</em> &#8212;</div>'+
-  '<div class="kv">'+
-  '<span class="kk">languages</span><span class="kvv">C++ &middot; Python &middot; Go &middot; C &middot; C# &middot; SQL &middot; Rust (learning)</span>'+
-  '<span class="kk">security</span><span class="kvv">OSINT &middot; reverse engineering &middot; vulnerability research</span>'+
-  '<span class="kk">systems</span><span class="kvv">Linux &middot; memory management &middot; Docker &middot; networking</span>'+
-  '<span class="kk">tools</span><span class="kvv">Git &middot; Linux CLI &middot; FastAPI &middot; Flask</span>'+
-  '<span class="kk">clubs</span><span class="kvv">Layer 8 &middot; ACM PESU (webmaster) &middot; HSP &middot; QQC</span>'+
-  '</div></div>'+
-  '<div class="dump-sep"></div>'+
-  '<div><div class="dump-lbl">&#8212; <em>contact.md</em> &#8212;</div>'+
-  '<div class="links">'+
-  '<a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>'+
-  '<a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>'+
-  '<a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>'+
-  '<a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>'+
-  '</div></div>';
-}
-
-/* ─── Command map ───────────────────────────────────────── */
-var MAP={
-  "dir":"~/dir","ls":"~/dir","ls -la":"~/dir",
-  "cd projects":"~/projects","projects":"~/projects","cat projects":"~/projects","ls projects":"~/projects",
-  "cat frame":"~/projects/frame","cd projects/frame":"~/projects/frame",
-  "cat mocker":"~/projects/mocker","cd projects/mocker":"~/projects/mocker",
-  "cat radfs":"~/projects/radfs","cd projects/radfs":"~/projects/radfs",
-  "cat hibp":"~/projects/hibp","cat how i met your password":"~/projects/hibp","cd projects/hibp":"~/projects/hibp",
-  "cat algo":"~/projects/algo","cat algorithm optimization":"~/projects/algo","cd projects/algo":"~/projects/algo",
-  "cd writing":"~/writing","cat writing":"~/writing","ls writing":"~/writing",
-  "cd blogs":"~/writing","cat blogs":"~/writing","ls blogs":"~/writing",
-  "cat mocker-post":"~/writing/mocker","cat mocker-cpu-emulator":"~/writing/mocker","cd writing/mocker":"~/writing/mocker",
-  "cd skills":"~/skills","cat skills":"~/skills","ls skills":"~/skills",
-  "cat contact.md":"~/contact","cat contact":"~/contact","contact":"~/contact",
-  "clear":"__clear__","cd ~":"__home__","cd":"__home__","cd ..":"__up__","..":"__up__"
-};
-
-/* ─── Runtime ───────────────────────────────────────────── */
-var cur="~";
-function getPrompt(){ return "visitor@void:"+cur+"$ "; }
-function set(h){ document.getElementById("term-output").innerHTML=h; }
-
-function go(to){
-  if(!PAGES[to]){
-    set('<div class="t-err">no such file: <span>'+to.replace("~/","")+'</span> &#8212; try <span class="t-hint">dir</span></div>');
-    return;
-  }
-  cur=to;
-  set(PAGES[to]());
-  document.getElementById("pr").textContent=getPrompt();
-}
-
-var inp=document.getElementById("cmd");
-inp.addEventListener("keydown",function(e){
-  if(e.key!=="Enter") return;
-  var v=inp.value.trim(); inp.value="";
-  if(!v) return;
-  var low=v.toLowerCase().replace(/\s+/g," ").replace(/\/$/,"");
-
-  if(low==="cat all"){ cur="~"; set(allPage()); document.getElementById("pr").textContent=getPrompt(); return; }
-  if(low==="clear"){   cur="~"; set("");         document.getElementById("pr").textContent=getPrompt(); return; }
-  if(low==="cd ~"||low==="cd"||low==="home"){ cur="~"; set(""); document.getElementById("pr").textContent=getPrompt(); return; }
-  if(low==="cd .."||low===".."){ var p=cur.split("/"); cur=p.length>1?p.slice(0,-1).join("/"):"~"; set(""); document.getElementById("pr").textContent=getPrompt(); return; }
-  if(low==="help"){
-    set('<div class="t-ok">'+
-    'dir&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; list all files &amp; folders<br>'+
-    'cat all&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; dump entire site<br>'+
-    'cd &lt;folder&gt;&nbsp;&nbsp;&#8212; navigate into folder<br>'+
-    'cat &lt;file&gt;&nbsp;&nbsp;&nbsp;&#8212; read a file<br>'+
-    'cd ..&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; go back<br>'+
-    'clear&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#8212; clear terminal<br><br>'+
-    '<span style="color:var(--accent)">writing commands:</span><br>'+
-    'cd writing&nbsp;&nbsp;&nbsp;&#8212; list posts<br>'+
-    'cat mocker-post &#8212; read cpu emulator post'+
-    '</div>');
-    return;
-  }
-
-  if(MAP[low]){ go(MAP[low]); return; }
-
-  var strip=low.replace(/^(cd |cat |ls )/,"").replace(/\.md$/,"").replace(/\.cpp$/,"").replace(/\.py$/,"");
-  if(PAGES["~/"+strip]){ go("~/"+strip); return; }
-  if(PAGES["~/projects/"+strip]){ go("~/projects/"+strip); return; }
-  if(PAGES["~/writing/"+strip]){ go("~/writing/"+strip); return; }
-
-  set('<div class="t-err">command not found: <span>'+v+'</span> &#8212; type <span class="t-hint">help</span></div>');
-});
-
-document.getElementById("pg").addEventListener("click",function(e){
-  if(!e.target.closest("a")) inp.focus();
-});
-</script>
+<script src="./static/post-utils.js"></script>
+<script src="./static/app.js"></script>
 </body>
 </html>
