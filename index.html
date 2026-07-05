@@ -441,30 +441,136 @@ html, body {
 
 .post-article .post-body h1,
 .post-article .post-body h2,
-.post-article .post-body h3 {
+.post-article .post-body h3,
+.post-article .post-body h4 {
   color: var(--fg);
-  margin: 1.4rem 0 .6rem;
+  margin: 1.8rem 0 .75rem;
   line-height: 1.35;
-  font-size: 1rem;
+  font-weight: 700;
+}
+
+.post-article .post-body h1 { font-size: clamp(1.25rem, 2.4vw, 1.65rem); }
+.post-article .post-body h2 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+.post-article .post-body h3 { font-size: 1.05rem; }
+.post-article .post-body h4 { font-size: 1rem; color: var(--muted); }
+
+.post-article .post-body li {
+  margin-bottom: .45rem;
+  padding-left: .2rem;
+}
+
+.post-article .post-body ul,
+.post-article .post-body ol {
+  padding-left: 1.4rem;
+}
+
+.post-article .post-body blockquote {
+  margin: 1.4rem 0;
+  padding: .9rem 1.1rem;
+  border-left: 3px solid var(--accent);
+  background: rgba(201,165,90,.04);
+  color: var(--muted);
+}
+
+.post-article .post-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.post-article .post-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.post-article .post-body .table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1.2rem;
+}
+
+.post-article .post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.post-article .post-body th,
+.post-article .post-body td {
+  border: 1px solid var(--border);
+  padding: .55rem .75rem;
+  text-align: left;
+}
+
+.post-article .post-body th {
+  color: var(--fg);
+  background: rgba(255,255,255,.03);
 }
 
 .post-article .post-body pre {
-  padding: 1rem;
+  padding: 1rem 1.1rem;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow-x: auto;
   background: rgba(255,255,255,.02);
+  margin-bottom: 1.2rem;
 }
 
-.post-article .post-body code {
+.post-article .post-body pre code.hljs {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.post-article .post-body :not(pre) > code {
   font-family: var(--mono);
   font-size: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  padding: .12em .4em;
+  border-radius: 4px;
+  color: var(--fg);
+}
+
+.post-article .post-body .hljs { color: var(--fg); background: transparent; }
+.post-article .post-body .hljs-keyword,
+.post-article .post-body .hljs-selector-tag,
+.post-article .post-body .hljs-title { color: var(--accent); }
+.post-article .post-body .hljs-string,
+.post-article .post-body .hljs-number,
+.post-article .post-body .hljs-literal { color: var(--accent2); }
+.post-article .post-body .hljs-comment,
+.post-article .post-body .hljs-quote { color: var(--muted); font-style: italic; }
+.post-article .post-body .hljs-built_in,
+.post-article .post-body .hljs-name { color: #8cb4c9; }
+.post-article .post-body .hljs-meta { color: var(--muted); }
+
+.post-article .post-body figure {
+  margin: 1.4rem 0;
 }
 
 .post-article .post-body img {
-  width: 100%;
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
   border: 1px solid var(--border);
   border-radius: 6px;
+}
+
+.post-article .post-body a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.post-article .post-body a:hover {
+  text-decoration: underline;
+}
+
+.post-article .post-body strong {
+  color: var(--fg);
+  font-weight: 700;
 }
 
 /* ── Route shell ─────────────────────────────────────────── */
@@ -538,6 +644,7 @@ body.route-page #route-shell {
   .kv { gap: .4rem 1.8rem; }
 }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
 </head>
 <body>
 <div id="pg">
@@ -558,13 +665,210 @@ body.route-page #route-shell {
       </div>
     </div>
 
-    <!-- Blog -->
-    <div class="sec-label">blog</div>
-    <div class="prose">
-      <p>I write about systems, emulation, and the strange projects that keep turning into full-stack operating systems.</p>
-      <p><a class="lnk" href="/blog" data-route="/blog">open blog</a></p>
-    </div>
+    <!-- Recent Posts -->
+    <div class="sec-label">recent posts</div>
     <div id="writing-feed" class="post-feed"></div>
+
+    <!-- Projects -->
+    <div class="sec-label">projects</div>
+    <div class="proj-list">
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Mocker</span>
+          <span class="plang">C / Go</span>
+        </div>
+        <div class="pdesc">Container runtime built from scratch featuring namespace isolation, cgroups, process containment, and low-level Linux systems programming. Grew out of Potato CPU, a custom x86-style emulator implementing registers, memory management, and a fetch-decode-execute pipeline.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">RadFS</span>
+          <span class="plang">Go / FUSE</span>
+        </div>
+        <div class="pdesc">Userspace filesystem built with FUSE featuring adaptive radix tree indexing, efficient path resolution, and prefix compression for reduced memory overhead.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Frame</span>
+          <span class="plang">Founding Team</span>
+        </div>
+        <div class="pdesc">Node-based workflow editor for AI/media generation pipelines with orchestration, deployment automation, and cloud infrastructure tooling.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">How I Met Your Password</span>
+          <span class="plang">Flask + JavaScript</span>
+        </div>
+        <div class="pdesc">Local cybersecurity dashboard integrating Have I Been Pwned, OSINT lookups, and local port scanning while keeping all data on-device without cloud storage.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Algorithm Optimization</span>
+          <span class="plang">Python</span>
+        </div>
+        <div class="pdesc">A* search and Q-learning experiments for pathfinding, heuristic optimization, and performance analysis of classical search algorithms.</div>
+      </div>
+    </div>
+
+    <!-- Open Source Contributions -->
+    <div class="sec-label">open source</div>
+    <div class="proj-list">
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Xeneva OS</span>
+          <span class="plang">Open Source Contributor</span>
+        </div>
+        <div class="pdesc">Contributed to kernel and architecture-specific development for XenevaOS, focusing on low-level systems programming and operating system internals.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">LitmusChaos</span>
+          <span class="plang">Open Source Contributor</span>
+        </div>
+        <div class="pdesc">Contributed to LitmusChaos by implementing a YAML view for Chaos Probe Configuration, integrating GraphQL APIs, optimizing lazy loading with Apollo cache, and improving the ChaosCenter UI.</div>
+      </div>
+    </div>
+
+    <hr class="sep"/>
+
+    <!-- Connect -->
+    <div class="sec-label">connect</div>
+    <div class="prose">
+      <p>Happy to connect and collaborate.</p>
+    </div>
+    <div class="links">
+      <a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>
+      <a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>
+      <a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>
+      <a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>
+    </div>
+
+    <!-- Footer -->
+    <div id="site-footer">
+      <span>rendered with anna</span>
+      <span>2026</span>
+    </div>
+  </div>
+
+  <div id="route-shell"></div>
+</div><!-- #pg -->
+
+<script src="./static/post-utils.js"></script>
+<script src="./static/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  // Highlight code blocks injected by the SPA router
+  document.addEventListener('hljs-ready', function() {
+    document.querySelectorAll('pre code').forEach(function(block) {
+      hljs.highlightElement(block);
+    });
+  });
+</script>
+</body>
+</html>
+<div id="pg">
+  <div id="home-shell">
+    <!-- Status bar -->
+    <div id="statusbar">
+      <span class="bar-path">saankhya srikanth</span>
+      <span class="bar-sep">/</span>
+      <span>PESU ECC &middot; Bengaluru</span>
+    </div>
+
+    <!-- Hero -->
+    <div id="hero">
+      <h1>hi, i'm saankhya </h1>
+      <div class="tagline">
+        <p>CSE student at PESU ECC, Bengaluru. I like understanding how things work at a low level like how an OS isolates processes, how data is actually stored, how distributed systems stay consistent when things break.</p>
+        <p>Right now I'm exploring systems engineering, container internals and cybersecurity. Also learning Rust because apparently I enjoy pain.</p>
+      </div>
+    </div>
+
+    <div id="writing-feed" class="post-feed"></div>
+
+    <hr class="sep"/>
+
+    <!-- Projects -->
+    <div class="sec-label">projects</div>
+    <div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Mocker</span>
+          <span class="plang">C / Go</span>
+        </div>
+        <div class="pdesc">Container runtime built from scratch featuring namespace isolation, cgroups, process containment, and low-level Linux systems programming. Grew out of Potato CPU, a custom x86-style emulator implementing registers, memory management, and a fetch-decode-execute pipeline.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">RadFS</span>
+          <span class="plang">Go / FUSE</span>
+        </div>
+        <div class="pdesc">Userspace filesystem built with FUSE featuring adaptive radix tree indexing, efficient path resolution, and prefix compression for reduced memory overhead.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Frame</span>
+          <span class="plang">Founding Team</span>
+        </div>
+        <div class="pdesc">Node-based workflow editor for AI/media generation pipelines with orchestration, deployment automation, and cloud infrastructure tooling.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">How I Met Your Password</span>
+          <span class="plang">Flask + JavaScript</span>
+        </div>
+        <div class="pdesc">Local cybersecurity dashboard integrating Have I Been Pwned, OSINT lookups, and local port scanning while keeping all data on-device without cloud storage.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Algorithm Optimization</span>
+          <span class="plang">Python</span>
+        </div>
+        <div class="pdesc">A* search and Q-learning experiments for pathfinding, heuristic optimization, and performance analysis of classical search algorithms.</div>
+      </div>
+    </div>
+
+    <hr class="sep"/>
+
+    <!-- Open Source -->
+    <div class="sec-label">open source</div>
+    <div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Xeneva OS</span>
+          <span class="plang">Open Source Contributor</span>
+        </div>
+        <div class="pdesc">Contributed to kernel and architecture-specific development for XenevaOS, focusing on low-level systems programming and operating system internals.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">LitmusChaos</span>
+          <span class="plang">Open Source Contributor</span>
+        </div>
+        <div class="pdesc">Contributed to LitmusChaos by implementing a YAML view for Chaos Probe Configuration, integrating GraphQL APIs, optimizing lazy loading with Apollo cache, and improving the ChaosCenter UI.</div>
+    <div id="term-card" style="margin-top:0">
+      <div id="term-titlebar">
+        <span class="tc tc-r"></span>
+        <span class="tc tc-y"></span>
+        <span class="tc tc-g"></span>
+        <span id="term-title">~/contributions</span>
+      </div>
+      <div id="term-body">
+        <div class="proj-item">
+          <div class="proj-top">
+            <span class="pname">Xeneva OS</span>
+            <span class="plang">Open Source Contributor</span>
+          </div>
+          <div class="pdesc">Contributed to kernel and architecture-specific development for XenevaOS, focusing on low-level systems programming and operating system internals.</div>
+        </div>
+        <div class="proj-item">
+          <div class="proj-top">
+            <span class="pname">LitmusChaos</span>
+            <span class="plang">Open Source Contributor</span>
+          </div>
+          <div class="pdesc">Contributed to LitmusChaos by implementing a YAML view for Chaos Probe Configuration, integrating GraphQL APIs, optimizing lazy loading with Apollo cache, and improving the ChaosCenter UI.</div>
+        </div>
+      </div>
+    </div>
 
     <hr class="sep"/>
 

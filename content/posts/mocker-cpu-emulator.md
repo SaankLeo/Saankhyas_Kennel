@@ -95,7 +95,7 @@ Say no and you get a fault instead of silently trashing someone else's memory. T
 
 Here's what that boundary looks like:
 
-!image1.png
+![Memory boundary diagram](image1.png)
 
 Phase 4: User code doesn't get to do whatever it wants
 
@@ -113,7 +113,7 @@ mret                  ; pc = mepc, back to U-mode
 
 Here's the round trip:
 
-!image2.png
+![ecall round-trip diagram](image2.png)
 
 Once that existed, syscalls were basically free — `PRINT_INT`, `EXIT`, `YIELD`, `SEND`, `RECV` are all just numbers the handler switches on.
 
@@ -140,7 +140,7 @@ Rude, but this is exactly how every real scheduler guarantees it gets the CPU ba
 
 Here's the handoff:
 
-!image3.png
+![Timer interrupt handoff diagram](image3.png)
 
 Phase 6: Now they're isolated AND lonely :(
 

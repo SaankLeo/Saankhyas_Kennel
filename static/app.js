@@ -61,12 +61,6 @@
         '</a></div>';
     }).join('');
 
-    html += '<div class="post-card" style="margin-top:.2rem">' +
-      '<a class="post-card-link" href="/blog" data-route="/blog">' +
-      '<div class="post-card-title">Browse the full blog</div>' +
-      '<div class="post-card-desc">See the full archive and open individual posts from here.</div>' +
-      '</a></div>';
-
     feed.innerHTML = html;
     document.title = "Saankhya's Kennel";
   }
@@ -145,18 +139,19 @@
         });
 
         if (!post) {
-          feed.innerHTML = '<div class="t-err">That post could not be found.</div>';
+          showRouteView();
+          routeShell.innerHTML = '<div class="t-err">That post could not be found.</div>';
           return;
         }
 
-        var markdownResponse = await fetch('/content/posts/' + post.slug + '.md');
-        if (!markdownResponse.ok) {
-          feed.innerHTML = '<div class="t-err">The markdown file for this post is missing.</div>';
+        var postResponse = await fetch('/api/post/' + post.slug);
+        if (!postResponse.ok) {
+          showRouteView();
+          routeShell.innerHTML = '<div class="t-err">The markdown file for this post is missing.</div>';
           return;
         }
 
-        var markdown = await markdownResponse.text();
-        var parsed = window.parseMarkdownPost(markdown, post.slug);
+        var parsed = await postResponse.json();
         renderPostView(post, parsed);
       } catch (error) {
         feed.innerHTML = '<div class="t-err">Unable to render this post right now.</div>';

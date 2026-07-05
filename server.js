@@ -59,12 +59,15 @@ function renderBlogPage(posts, selectedSlug) {
     '</article>' +
     '</div>';
 
+  let pageTitle = "Blog · Saankhya's Kennel";
+
   if (selectedSlug) {
     const post = posts.find((item) => item.slug === selectedSlug);
     if (post) {
       const markdownPath = path.join(rootDir, 'content', 'posts', post.slug + '.md');
       const markdown = fs.readFileSync(markdownPath, 'utf8');
       const parsed = postUtils.parseMarkdownPost(markdown, post.slug);
+      pageTitle = parsed.title + " · Saankhya's Kennel";
       content = '<div class="post-shell">' +
         '<div class="post-topbar">' +
         '<a class="lnk" href="/blog">← blog</a>' +
@@ -85,10 +88,10 @@ function renderBlogPage(posts, selectedSlug) {
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Blog · Saankhya's Kennel</title>
+<title>${pageTitle}</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root { --bg:#0c0c0a; --surface:#111110; --fg:#d6d0be; --muted:#7a7a68; --dim:#252520; --border:#2e2e28; --accent:#c9a55a; --glow:rgba(201,165,90,0.07); --mono:"JetBrains Mono","Fira Code",monospace; }
+:root { --bg:#0c0c0a; --surface:#111110; --fg:#d6d0be; --muted:#7a7a68; --dim:#252520; --border:#2e2e28; --accent:#c9a55a; --accent2:#6b9e78; --glow:rgba(201,165,90,0.07); --mono:"JetBrains Mono","Fira Code",monospace; }
 html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 17px; line-height: 1.9; min-height: 100vh; }
 #pg { max-width: 900px; margin: 0 auto; padding: 5rem clamp(2rem, 7vw, 6rem) 8rem; }
 .post-shell { max-width: 760px; padding: 0.2rem 0 0.4rem; }
@@ -99,13 +102,37 @@ html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); 
 .post-article .post-meta { color: var(--muted); font-size: 13px; margin-bottom: 1.3rem; }
 .post-article .post-body { color: var(--muted); font-size: 16px; line-height: 1.95; }
 .post-article .post-body p, .post-article .post-body ul, .post-article .post-body ol, .post-article .post-body pre, .post-article .post-body figure { margin-bottom: 1.2rem; }
-.post-article .post-body h1, .post-article .post-body h2, .post-article .post-body h3 { color: var(--fg); margin: 1.5rem 0 .7rem; line-height: 1.35; font-size: 1rem; }
-.post-article .post-body pre { padding: 1rem; border: 1px solid var(--border); border-radius: 6px; overflow-x: auto; background: rgba(255,255,255,.02); }
-.post-article .post-body code { font-family: var(--mono); font-size: 14px; }
-.post-article .post-body img { display: block; width: auto; max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; image-rendering: auto; object-fit: contain; }
+.post-article .post-body h1,
+.post-article .post-body h2,
+.post-article .post-body h3,
+.post-article .post-body h4 { color: var(--fg); margin: 1.8rem 0 .75rem; line-height: 1.35; font-weight: 700; }
+.post-article .post-body h1 { font-size: clamp(1.25rem, 2.4vw, 1.65rem); }
+.post-article .post-body h2 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+.post-article .post-body h3 { font-size: 1.05rem; }
+.post-article .post-body h4 { font-size: 1rem; color: var(--muted); }
+.post-article .post-body li { margin-bottom: .45rem; padding-left: .2rem; }
+.post-article .post-body ul, .post-article .post-body ol { padding-left: 1.4rem; }
+.post-article .post-body blockquote { margin: 1.4rem 0; padding: .9rem 1.1rem; border-left: 3px solid var(--accent); background: rgba(201,165,90,.04); color: var(--muted); }
+.post-article .post-body blockquote p:last-child { margin-bottom: 0; }
+.post-article .post-body hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+.post-article .post-body .table-wrap { overflow-x: auto; margin-bottom: 1.2rem; }
+.post-article .post-body table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.post-article .post-body th, .post-article .post-body td { border: 1px solid var(--border); padding: .55rem .75rem; text-align: left; }
+.post-article .post-body th { color: var(--fg); background: rgba(255,255,255,.03); }
+.post-article .post-body pre { padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: 6px; overflow-x: auto; background: rgba(255,255,255,.02); margin-bottom: 1.2rem; }
+.post-article .post-body pre code.hljs { display: block; padding: 0; background: transparent; border: none; font-size: 13px; line-height: 1.7; }
+.post-article .post-body :not(pre) > code { font-family: var(--mono); font-size: 14px; background: rgba(255,255,255,.04); border: 1px solid var(--border); padding: .12em .4em; border-radius: 4px; color: var(--fg); }
+.post-article .post-body .hljs { color: var(--fg); background: transparent; }
+.post-article .post-body .hljs-keyword, .post-article .post-body .hljs-selector-tag, .post-article .post-body .hljs-title { color: var(--accent); }
+.post-article .post-body .hljs-string, .post-article .post-body .hljs-number, .post-article .post-body .hljs-literal { color: var(--accent2); }
+.post-article .post-body .hljs-comment, .post-article .post-body .hljs-quote { color: var(--muted); font-style: italic; }
+.post-article .post-body .hljs-built_in, .post-article .post-body .hljs-name { color: #8cb4c9; }
+.post-article .post-body .hljs-meta { color: var(--muted); }
 .post-article .post-body figure { margin: 1.4rem 0; }
+.post-article .post-body img { display: block; width: auto; max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; image-rendering: auto; object-fit: contain; }
 .post-article .post-body a { color: var(--accent); text-decoration: none; }
 .post-article .post-body a:hover { text-decoration: underline; }
+.post-article .post-body strong { color: var(--fg); font-weight: 700; }
 .post-card { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem; background: rgba(255,255,255,.015); margin-bottom: 1rem; transition: border-color .15s, background .15s; }
 .post-card:hover { border-color: var(--accent); background: rgba(201,165,90,0.05); }
 .post-card-link { color: inherit; text-decoration: none; display: block; }
@@ -134,23 +161,13 @@ function readMarkdownPosts() {
     const slug = file.replace(/\.md$/, '');
     const fullPath = path.join(postsDir, file);
     const contents = fs.readFileSync(fullPath, 'utf8');
-    const match = contents.match(/^---\s*([\s\S]*?)\s*---\s*/);
-    const frontMatter = match ? match[1] : '';
-    const fields = {};
-    for (const rawLine of frontMatter.split(/\r?\n/)) {
-      const line = rawLine.trim();
-      if (!line || !line.includes(':')) continue;
-      const separator = line.indexOf(':');
-      const key = line.slice(0, separator).trim();
-      const value = line.slice(separator + 1).trim().replace(/^"|"$/g, '');
-      fields[key] = value;
-    }
+    const parsed = postUtils.parseMarkdownPost(contents, slug);
     return {
       slug,
-      title: fields.title || slug.replace(/-/g, ' '),
-      date: fields.date || '',
-      description: fields.description || '',
-      tags: fields.tags ? fields.tags.split(',').map((item) => item.trim()) : []
+      title: parsed.title,
+      date: parsed.date,
+      description: parsed.description,
+      tags: parsed.tags
     };
   });
 }
@@ -161,6 +178,27 @@ http.createServer((req, res) => {
 
   if (pathname === '/api/posts') {
     sendJson(res, readMarkdownPosts());
+    return;
+  }
+
+  if (pathname.startsWith('/api/post/')) {
+    const slug = pathname.slice('/api/post/'.length);
+    const posts = readMarkdownPosts();
+    const post = posts.find((item) => item.slug === slug);
+    if (!post) {
+      res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'Post not found' }));
+      return;
+    }
+
+    const markdownPath = path.join(rootDir, 'content', 'posts', post.slug + '.md');
+    try {
+      const markdown = fs.readFileSync(markdownPath, 'utf8');
+      sendJson(res, postUtils.parseMarkdownPost(markdown, post.slug));
+    } catch (error) {
+      res.writeHead(404, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ error: 'Post file missing' }));
+    }
     return;
   }
 

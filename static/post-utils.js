@@ -13,7 +13,6 @@ function resolveAssetPath(assetPath, slug) {
   if (!trimmed || /^https?:\/\//i.test(trimmed) || /^data:/i.test(trimmed) || trimmed.startsWith('/')) {
     return trimmed;
   }
-
   return '/content/posts/' + trimmed;
 }
 
@@ -44,82 +43,223 @@ function parseFrontMatter(source) {
   return fields;
 }
 
+// Render inline markdown: bold, italic, inline code, links — in the right order
 function renderInline(text) {
-  let safe = escapeHtml(text);
-  safe = safe.replace(/`([^`]+)`/g, '<code>$1</code>');
-  safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  safe = safe.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-  safe = safe.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-  return safe;
+  // Split on backtick spans first to avoid escaping inside code
+  const parts = text.split(/(`[^`]+`)/g);
+  return parts.map((part, i) => {
+    if (i % 2 === 1) {
+      // code span — escape then wrap, don't apply other transforms
+      const inner = part.slice(1, -1);
+      return '<code>' + escapeHtml(inner) + '</code>';
+    }
+    // Regular text — escape then apply inline formatting
+    let s = escapeHtml(part);
+    // bold
+    s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // italic
+    s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    // links
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }).join('');
 }
 
+/**
+ * Proper line-by-line state machine Markdown renderer.
+ * Handles: fenced code blocks, headings, blockquotes, horizontal rules,
+ * ordered/unordered lists, images, paragraphs.
+ * Emits data-language on <code> for highlight.js.
+ */
 function renderMarkdown(body, slug) {
   if (!body || !body.trim()) return '';
 
-  const blocks = body.trim().split(/\n{2,}/);
+  const lines = body.split(/\r?\n/);
   let html = '';
 
-  for (const block of blocks) {
-    const trimmed = block.trim();
-    if (!trimmed) continue;
+  // State
+  let inFence = false;
+  let fenceLang = '';
+  let fenceLines = [];
 
-    if (/^```/.test(trimmed)) {
-      const codeLines = trimmed.replace(/^```[\w-]*\s*/, '').replace(/```$/, '').split('\n');
-      html += '<pre><code>' + escapeHtml(codeLines.join('\n')) + '</code></pre>';
+  let inList = false;       // ul
+  let inOrderedList = false; // ol
+  let listItems = [];
+
+  let inBlockquote = false;
+  let bqLines = [];
+
+  let paraLines = [];
+
+  function flushPara() {
+    if (!paraLines.length) return;
+    const text = paraLines.join(' ').trim();
+    if (text) html += '<p>' + renderInline(text) + '</p>\n';
+    paraLines = [];
+  }
+
+  function flushList() {
+    if (!inList && !inOrderedList) return;
+    const tag = inOrderedList ? 'ol' : 'ul';
+    html += '<' + tag + '>' + listItems.map(function(li) {
+      return '<li>' + renderInline(li) + '</li>';
+    }).join('') + '</' + tag + '>\n';
+    listItems = [];
+    inList = false;
+    inOrderedList = false;
+  }
+
+  function flushBlockquote() {
+    if (!inBlockquote) return;
+    html += '<blockquote>' + bqLines.map(function(l) {
+      return '<p>' + renderInline(l) + '</p>';
+    }).join('') + '</blockquote>\n';
+    bqLines = [];
+    inBlockquote = false;
+  }
+
+  function flushFence() {
+    const code = fenceLines.join('\n');
+    const langAttr = fenceLang ? ' class="language-' + escapeHtml(fenceLang) + '"' : '';
+    html += '<pre><code' + langAttr + '>' + escapeHtml(code) + '</code></pre>\n';
+    fenceLines = [];
+    fenceLang = '';
+    inFence = false;
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const line = raw.replace(/\r$/, '');
+
+    // ── Fenced code block ────────────────────────────────────────
+    if (!inFence && /^```/.test(line)) {
+      flushPara();
+      flushList();
+      flushBlockquote();
+      fenceLang = line.replace(/^```/, '').trim();
+      inFence = true;
+      fenceLines = [];
+      continue;
+    }
+    if (inFence) {
+      if (/^```/.test(line)) {
+        flushFence();
+      } else {
+        fenceLines.push(line);
+      }
       continue;
     }
 
-    if (/^#{1,6}\s+/.test(trimmed)) {
-      const depth = trimmed.match(/^#+/)[0].length;
-      const content = trimmed.replace(/^#{1,6}\s+/, '');
-      html += '<h' + depth + '>' + renderInline(content) + '</h' + depth + '>';
+    // ── Blank line ────────────────────────────────────────────────
+    if (!line.trim()) {
+      flushPara();
+      flushList();
+      flushBlockquote();
       continue;
     }
 
-    if (/^[-*]\s+/.test(trimmed)) {
-      const items = trimmed.split(/\n/).filter(Boolean).map((line) => '<li>' + renderInline(line.replace(/^[-*]\s+/, '')) + '</li>');
-      html += '<ul>' + items.join('') + '</ul>';
+    // ── Horizontal rule ───────────────────────────────────────────
+    if (/^(\*{3,}|-{3,}|_{3,})\s*$/.test(line)) {
+      flushPara();
+      flushList();
+      flushBlockquote();
+      html += '<hr>\n';
       continue;
     }
 
-    if (/^\d+\.\s+/.test(trimmed)) {
-      const items = trimmed.split(/\n/).filter(Boolean).map((line) => '<li>' + renderInline(line.replace(/^\d+\.\s+/, '')) + '</li>');
-      html += '<ol>' + items.join('') + '</ol>';
+    // ── Headings ──────────────────────────────────────────────────
+    if (/^#{1,6}\s+/.test(line)) {
+      flushPara();
+      flushList();
+      flushBlockquote();
+      const depth = line.match(/^#+/)[0].length;
+      const content = line.replace(/^#{1,6}\s+/, '').replace(/\s+#+\s*$/, '');
+      html += '<h' + depth + '>' + renderInline(content) + '</h' + depth + '>\n';
       continue;
     }
 
-    const imageMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)/);
-    if (imageMatch) {
-      const assetPath = resolveAssetPath(imageMatch[2], slug);
-      html += '<figure><img src="' + escapeHtml(assetPath) + '" alt="' + escapeHtml(imageMatch[1]) + '" loading="eager" decoding="async" /></figure>';
+    // ── Blockquote ────────────────────────────────────────────────
+    if (/^>\s?/.test(line)) {
+      flushPara();
+      flushList();
+      inBlockquote = true;
+      bqLines.push(line.replace(/^>\s?/, ''));
+      continue;
+    } else if (inBlockquote) {
+      flushBlockquote();
+    }
+
+    // ── Unordered list ────────────────────────────────────────────
+    if (/^[-*+]\s+/.test(line)) {
+      flushPara();
+      if (inOrderedList) flushList();
+      inList = true;
+      listItems.push(line.replace(/^[-*+]\s+/, ''));
       continue;
     }
 
-    const lines = trimmed.split(/\n/);
-    const paragraphs = [];
-    let current = [];
+    // ── Ordered list ──────────────────────────────────────────────
+    if (/^\d+\.\s+/.test(line)) {
+      flushPara();
+      if (inList) flushList();
+      inOrderedList = true;
+      listItems.push(line.replace(/^\d+\.\s+/, ''));
+      continue;
+    }
 
-    for (const line of lines) {
-      if (!line.trim()) {
-        if (current.length) {
-          paragraphs.push(current.join(' '));
-          current = [];
+    // If we were building a list and hit non-list content, flush it
+    if (inList || inOrderedList) {
+      flushList();
+    }
+
+    // ── Standalone image ─────────────────────────────────────────
+    const imgMatch = line.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)\s*$/);
+    if (imgMatch) {
+      flushPara();
+      const alt = imgMatch[1];
+      const src = resolveAssetPath(imgMatch[2], slug);
+      html += '<figure><img src="' + escapeHtml(src) + '" alt="' + escapeHtml(alt) + '" loading="lazy" decoding="async" /></figure>\n';
+      continue;
+    }
+
+    // ── Table ─────────────────────────────────────────────────────
+    if (line.includes('|')) {
+      // Peek ahead — if next line is a separator row, this is a table header
+      const nextLine = lines[i + 1] ? lines[i + 1].replace(/\r$/, '') : '';
+      if (/^\|?[\s\-:]+\|/.test(nextLine)) {
+        flushPara();
+        flushList();
+        flushBlockquote();
+        // Collect table rows
+        const tableRows = [line];
+        i++; // skip separator
+        while (i + 1 < lines.length && lines[i + 1] && lines[i + 1].replace(/\r$/, '').includes('|')) {
+          i++;
+          tableRows.push(lines[i].replace(/\r$/, ''));
         }
+        const parseRow = (r) => r.replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+        const headers = parseRow(tableRows[0]);
+        const dataRows = tableRows.slice(1);
+        let table = '<table>\n<thead><tr>' + headers.map(h => '<th>' + renderInline(h) + '</th>').join('') + '</tr></thead>\n<tbody>\n';
+        for (const row of dataRows) {
+          const cells = parseRow(row);
+          table += '<tr>' + cells.map(c => '<td>' + renderInline(c) + '</td>').join('') + '</tr>\n';
+        }
+        table += '</tbody></table>\n';
+        html += table;
         continue;
       }
-      current.push(line.trim());
     }
 
-    if (current.length) {
-      paragraphs.push(current.join(' '));
-    }
-
-    if (paragraphs.length) {
-      html += paragraphs.map((paragraph) => '<p>' + renderInline(paragraph) + '</p>').join('');
-    } else {
-      html += '<p>' + renderInline(trimmed) + '</p>';
-    }
+    // ── Paragraph accumulator ─────────────────────────────────────
+    paraLines.push(line);
   }
+
+  // Flush anything remaining
+  flushPara();
+  flushList();
+  flushBlockquote();
+  if (inFence) flushFence(); // unclosed fence — emit anyway
 
   return html;
 }

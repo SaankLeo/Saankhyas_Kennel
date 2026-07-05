@@ -1,0 +1,13 @@
+{
+  "name": "saankhyas-kennel",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/post-utils.test.js"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1",
+    "marked": "^15.0.7",
+    "marked-highlight": "^2.2.1"
+  }
+}
