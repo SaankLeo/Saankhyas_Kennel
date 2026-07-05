@@ -93,8 +93,10 @@ function renderBlogPage(posts, selectedSlug) {
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root { --bg:#0c0c0a; --surface:#111110; --fg:#d6d0be; --muted:#7a7a68; --dim:#252520; --border:#2e2e28; --accent:#c9a55a; --accent2:#6b9e78; --glow:rgba(201,165,90,0.07); --mono:"JetBrains Mono","Fira Code",monospace; }
 html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 18px; line-height: 1.9; min-height: 100vh; }
-#pg { max-width: 900px; margin: 0 auto; padding: 5rem clamp(2rem, 7vw, 6rem) 8rem; }
-body.route-page #pg { width: 100%; max-width: none; padding-left: clamp(1rem, 2vw, 2rem); padding-right: clamp(1rem, 2vw, 2rem); }
+#pg { width: 100%; max-width: none; padding: 5rem clamp(2rem, 7vw, 6rem) 8rem; }
+#home-shell { max-width: 900px; margin: 0 auto; }
+#route-shell { width: 100%; }
+body.route-page #pg { padding-left: clamp(1rem, 2vw, 2rem); padding-right: clamp(1rem, 2vw, 2rem); }
 .post-shell { max-width: 100%; padding: 0.2rem 0 0.4rem; }
 .post-topbar { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.4rem; }
 .post-kicker { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: .85rem; font-weight: 700; }
