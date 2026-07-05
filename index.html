@@ -31,7 +31,7 @@ html, body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--mono);
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.9;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
@@ -64,7 +64,7 @@ html, body {
 }
 
 #hero h1 {
-  font-size: clamp(1.8rem, 4.5vw, 2.5rem);
+  font-size: clamp(2rem, 5vw, 2.9rem);
   font-weight: 700;
   color: var(--fg);
   letter-spacing: -.01em;
@@ -73,10 +73,10 @@ html, body {
 }
 
 #hero .tagline {
-  font-size: 16px;
+  font-size: 18px;
   color: var(--muted);
   line-height: 2;
-  max-width: 620px;
+  max-width: 640px;
 }
 
 #hero .tagline p { margin-bottom: .7rem; }
@@ -92,13 +92,13 @@ html, body {
   display: flex;
   align-items: center;
   gap: .8rem;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-bottom: 1.4rem;
-  margin-top: 3.5rem;
+  margin-bottom: 1.6rem;
+  margin-top: 4rem;
 }
 
 .sec-label::before {
@@ -116,7 +116,7 @@ html, body {
 }
 
 .prose p {
-  font-size: 16px;
+  font-size: 18px;
   color: var(--muted);
   line-height: 2;
   margin-bottom: 1rem;
@@ -252,9 +252,9 @@ html, body {
   margin-bottom: .3rem;
 }
 
-.pname { color: var(--fg); font-size: 15px; }
-.plang { color: var(--muted); font-size: 13px; align-self: center; }
-.pdesc { color: var(--muted); font-size: 14px; line-height: 1.78; }
+.pname { color: var(--fg); font-size: 16px; }
+.plang { color: var(--muted); font-size: 14px; align-self: center; }
+.pdesc { color: var(--muted); font-size: 15px; line-height: 1.85; }
 
 /* blog list in terminal */
 .blog-item {
@@ -268,9 +268,9 @@ html, body {
   gap: .5rem;
   margin-bottom: .25rem;
 }
-.bname { color: var(--fg); font-size: 15px; }
+.bname { color: var(--fg); font-size: 16px; }
 .bdate { color: var(--muted); font-size: 13px; white-space: nowrap; align-self: center; }
-.bdesc { color: var(--muted); font-size: 14px; line-height: 1.78; }
+.bdesc { color: var(--muted); font-size: 15px; line-height: 1.85; }
 .btags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .5rem; }
 .btag  {
   font-size: 12px;
@@ -351,7 +351,7 @@ html, body {
 
 .post-card-title {
   color: var(--fg);
-  font-size: 16px;
+  font-size: 17px;
   margin-bottom: .35rem;
   line-height: 1.45;
 }
@@ -364,8 +364,8 @@ html, body {
 
 .post-card-desc {
   color: var(--muted);
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 16px;
+  line-height: 1.85;
 }
 
 .post-card-tags {
@@ -597,8 +597,8 @@ body.route-page #route-shell {
 .lnk {
   color: var(--muted);
   text-decoration: none;
-  font-size: 14px;
-  padding: 7px 20px;
+  font-size: 15px;
+  padding: 8px 22px;
   border: 1px solid var(--border);
   border-radius: 3px;
   transition: color .15s, border-color .15s, background .15s;
@@ -763,138 +763,5 @@ body.route-page #route-shell {
     });
   });
 </script>
-</body>
-</html>
-<div id="pg">
-  <div id="home-shell">
-    <!-- Status bar -->
-    <div id="statusbar">
-      <span class="bar-path">saankhya srikanth</span>
-      <span class="bar-sep">/</span>
-      <span>PESU ECC &middot; Bengaluru</span>
-    </div>
-
-    <!-- Hero -->
-    <div id="hero">
-      <h1>hi, i'm saankhya </h1>
-      <div class="tagline">
-        <p>CSE student at PESU ECC, Bengaluru. I like understanding how things work at a low level like how an OS isolates processes, how data is actually stored, how distributed systems stay consistent when things break.</p>
-        <p>Right now I'm exploring systems engineering, container internals and cybersecurity. Also learning Rust because apparently I enjoy pain.</p>
-      </div>
-    </div>
-
-    <div id="writing-feed" class="post-feed"></div>
-
-    <hr class="sep"/>
-
-    <!-- Projects -->
-    <div class="sec-label">projects</div>
-    <div>
-      <div class="proj-item">
-        <div class="proj-top">
-          <span class="pname">Mocker</span>
-          <span class="plang">C / Go</span>
-        </div>
-        <div class="pdesc">Container runtime built from scratch featuring namespace isolation, cgroups, process containment, and low-level Linux systems programming. Grew out of Potato CPU, a custom x86-style emulator implementing registers, memory management, and a fetch-decode-execute pipeline.</div>
-      </div>
-      <div class="proj-item">
-        <div class="proj-top">
-          <span class="pname">RadFS</span>
-          <span class="plang">Go / FUSE</span>
-        </div>
-        <div class="pdesc">Userspace filesystem built with FUSE featuring adaptive radix tree indexing, efficient path resolution, and prefix compression for reduced memory overhead.</div>
-      </div>
-      <div class="proj-item">
-        <div class="proj-top">
-          <span class="pname">Frame</span>
-          <span class="plang">Founding Team</span>
-        </div>
-        <div class="pdesc">Node-based workflow editor for AI/media generation pipelines with orchestration, deployment automation, and cloud infrastructure tooling.</div>
-      </div>
-      <div class="proj-item">
-        <div class="proj-top">
-          <span class="pname">How I Met Your Password</span>
-          <span class="plang">Flask + JavaScript</span>
-        </div>
-        <div class="pdesc">Local cybersecurity dashboard integrating Have I Been Pwned, OSINT lookups, and local port scanning while keeping all data on-device without cloud storage.</div>
-      </div>
-      <div class="proj-item">
-        <div class="proj-top">
-          <span class="pname">Algorithm Optimization</span>
-          <span class="plang">Python</span>
-        </div>
-        <div class="pdesc">A* search and Q-learning experiments for pathfinding, heuristic optimization, and performance analysis of classical search algorithms.</div>
-      </div>
-    </div>
-
-    <hr class="sep"/>
-
-    <!-- Open Source -->
-    <div class="sec-label">open source</div>
-    <div>
-      <div class="proj-item">
-        <div class="proj-top">
-          <span class="pname">Xeneva OS</span>
-          <span class="plang">Open Source Contributor</span>
-        </div>
-        <div class="pdesc">Contributed to kernel and architecture-specific development for XenevaOS, focusing on low-level systems programming and operating system internals.</div>
-      </div>
-      <div class="proj-item">
-        <div class="proj-top">
-          <span class="pname">LitmusChaos</span>
-          <span class="plang">Open Source Contributor</span>
-        </div>
-        <div class="pdesc">Contributed to LitmusChaos by implementing a YAML view for Chaos Probe Configuration, integrating GraphQL APIs, optimizing lazy loading with Apollo cache, and improving the ChaosCenter UI.</div>
-    <div id="term-card" style="margin-top:0">
-      <div id="term-titlebar">
-        <span class="tc tc-r"></span>
-        <span class="tc tc-y"></span>
-        <span class="tc tc-g"></span>
-        <span id="term-title">~/contributions</span>
-      </div>
-      <div id="term-body">
-        <div class="proj-item">
-          <div class="proj-top">
-            <span class="pname">Xeneva OS</span>
-            <span class="plang">Open Source Contributor</span>
-          </div>
-          <div class="pdesc">Contributed to kernel and architecture-specific development for XenevaOS, focusing on low-level systems programming and operating system internals.</div>
-        </div>
-        <div class="proj-item">
-          <div class="proj-top">
-            <span class="pname">LitmusChaos</span>
-            <span class="plang">Open Source Contributor</span>
-          </div>
-          <div class="pdesc">Contributed to LitmusChaos by implementing a YAML view for Chaos Probe Configuration, integrating GraphQL APIs, optimizing lazy loading with Apollo cache, and improving the ChaosCenter UI.</div>
-        </div>
-      </div>
-    </div>
-
-    <hr class="sep"/>
-
-    <!-- Connect -->
-    <div class="sec-label">connect</div>
-    <div class="prose">
-      <p>Happy to connect and collaborate.</p>
-    </div>
-    <div class="links">
-      <a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>
-      <a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>
-      <a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>
-      <a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>
-    </div>
-
-    <!-- Footer -->
-    <div id="site-footer">
-      <span>rendered with anna</span>
-      <span>2026</span>
-    </div>
-  </div>
-
-  <div id="route-shell"></div>
-</div><!-- #pg -->
-
-<script src="./static/post-utils.js"></script>
-<script src="./static/app.js"></script>
 </body>
 </html>

@@ -117,6 +117,13 @@
       '</div>';
 
     document.title = parsed.title + ' · Saankhya\'s Kennel';
+
+    // Trigger syntax highlighting on injected code blocks
+    if (window.hljs) {
+      routeShell.querySelectorAll('pre code').forEach(function (block) {
+        window.hljs.highlightElement(block);
+      });
+    }
   }
 
   async function loadPosts() {
@@ -185,7 +192,12 @@
     if (!target) return;
 
     event.preventDefault();
-    window.location.assign(target);
+    history.pushState(null, '', target);
+    renderRoute(target);
+  });
+
+  window.addEventListener('popstate', function () {
+    renderRoute(window.location.pathname);
   });
 
   renderRoute(window.location.pathname);
