@@ -46,9 +46,9 @@ html, body {
 
 body.route-page #pg {
   width: 100%;
-  max-width: 1480px;
-  padding-left: clamp(2rem, 5vw, 5rem);
-  padding-right: clamp(2rem, 5vw, 5rem);
+  max-width: none;
+  padding-left: clamp(1rem, 2vw, 2rem);
+  padding-right: clamp(1rem, 2vw, 2rem);
 }
 
 /* ── Status bar (top) ─────────────────────────────────────── */
@@ -415,13 +415,14 @@ body.route-page #pg {
 .post-article {
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: clamp(2rem, 4vw, 3.6rem) clamp(2rem, 5vw, 4.8rem);
+  width: 100%;
+  padding: clamp(1.6rem, 3vw, 3rem);
   background: rgba(255,255,255,.015);
 }
 
 .post-article .post-title {
   color: var(--fg);
-  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  font-size: clamp(1.6rem, 3vw, 2.8rem);
   margin-bottom: .6rem;
   line-height: 1.35;
 }
@@ -434,8 +435,8 @@ body.route-page #pg {
 
 .post-article .post-body {
   color: var(--muted);
-  font-size: 16px;
-  line-height: 1.95;
+  font-size: clamp(18px, 1.35vw, 23px);
+  line-height: 1.85;
 }
 
 .post-article .post-body p,
@@ -456,8 +457,8 @@ body.route-page #pg {
   font-weight: 700;
 }
 
-.post-article .post-body h1 { font-size: clamp(1.25rem, 2.4vw, 1.65rem); }
-.post-article .post-body h2 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+.post-article .post-body h1 { font-size: clamp(1.8rem, 3vw, 2.8rem); }
+.post-article .post-body h2 { font-size: clamp(1.35rem, 2.2vw, 2rem); }
 .post-article .post-body h3 { font-size: 1.05rem; }
 .post-article .post-body h4 { font-size: 1rem; color: var(--muted); }
 
