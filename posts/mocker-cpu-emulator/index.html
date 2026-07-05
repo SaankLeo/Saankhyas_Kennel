@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Saankhya's Kennel</title>
+<meta name="description" content="CSE student at PESU ECC exploring systems engineering, distributed systems, and cybersecurity."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Tokens ───────────────────────────────────────────────── */
+:root {
+  --bg:      #0c0c0a;
+  --surface: #111110;
+  --fg:      #d6d0be;
+  --muted:   #7a7a68;
+  --dim:     #252520;
+  --border:  #2e2e28;
+  --accent:  #c9a55a;
+  --accent2: #6b9e78;
+  --glow:    rgba(201, 165, 90, 0.07);
+  --mono:    "JetBrains Mono", "Fira Code", monospace;
+}
+
+/* ── Base ─────────────────────────────────────────────────── */
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 18px;
+  line-height: 1.9;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Page shell ───────────────────────────────────────────── */
+#pg {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 5rem clamp(2rem, 7vw, 6rem) 8rem;
+}
+
+/* ── Status bar (top) ─────────────────────────────────────── */
+#statusbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 5rem;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: .08em;
+}
+
+#statusbar .bar-path { color: var(--fg); }
+#statusbar .bar-sep  { color: var(--border); }
+
+/* ── Hero ─────────────────────────────────────────────────── */
+#hero {
+  margin-bottom: 4rem;
+}
+
+#hero h1 {
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-weight: 700;
+  color: var(--fg);
+  letter-spacing: -.01em;
+  margin-bottom: .9rem;
+  line-height: 1.2;
+}
+
+#hero .tagline {
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 2;
+  max-width: 640px;
+}
+
+#hero .tagline p { margin-bottom: .7rem; }
+#hero .tagline p:last-child { margin-bottom: 0; }
+
+#hero .tagline strong {
+  color: var(--accent);
+  font-weight: 400;
+}
+
+/* ── Section heading ──────────────────────────────────────── */
+.sec-label {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.6rem;
+  margin-top: 4rem;
+}
+
+.sec-label::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+/* ── Prose ────────────────────────────────────────────────── */
+.prose {
+  max-width: 640px;
+}
+
+.prose p {
+  font-size: 18px;
+  color: var(--muted);
+  line-height: 2;
+  margin-bottom: 1rem;
+}
+
+.prose p:last-child { margin-bottom: 0; }
+
+/* ── Divider ──────────────────────────────────────────────── */
+.sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3.5rem 0;
+}
+
+/* ── Terminal card ────────────────────────────────────────── */
+#term-card {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.02) inset,
+    0 12px 50px rgba(0,0,0,.6),
+    0 0 80px var(--glow);
+  overflow: hidden;
+  margin-top: 1.8rem;
+}
+
+/* title bar */
+#term-titlebar {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .75rem 1.1rem;
+  background: var(--dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.tc { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.tc-r { background: #ff5f57; }
+.tc-y { background: #febc2e; }
+.tc-g { background: #28c840; }
+
+#term-title {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .06em;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 3.6rem;
+}
+
+/* body */
+#term-body {
+  padding: 1.8rem 2rem 2rem;
+}
+
+#term-hint {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  line-height: 2;
+}
+
+#term-hint .hl { color: var(--accent); }
+
+#term-output {
+  min-height: 4px;
+  margin-bottom: 1.2rem;
+}
+
+/* input row */
+.irow {
+  display: flex;
+  align-items: center;
+}
+
+.pr {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-right: .55rem;
+  font-size: 15px;
+  white-space: nowrap;
+  user-select: none;
+}
+
+#cmd {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 15px;
+  flex: 1;
+  caret-color: var(--accent);
+  -webkit-appearance: none;
+}
+
+/* ── Terminal output elements ─────────────────────────────── */
+.tree-row {
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+  padding: .22rem 0;
+  font-size: 15px;
+}
+
+.br  { color: var(--dim); user-select: none; flex-shrink: 0; }
+.dn  { color: var(--fg); }
+.fn  { color: var(--muted); }
+.xn  { color: var(--accent); }
+.nt  { color: var(--muted); font-size: 13px; }
+
+.sh {
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.1rem;
+  font-weight: 700;
+}
+
+.proj-item {
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.proj-item:last-child { border-bottom: none; }
+
+.proj-top {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .3rem;
+}
+
+.pname { color: var(--fg); font-size: 16px; }
+.plang { color: var(--muted); font-size: 14px; align-self: center; }
+.pdesc { color: var(--muted); font-size: 15px; line-height: 1.85; }
+
+/* blog list in terminal */
+.blog-item {
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.blog-item:last-child { border-bottom: none; }
+.blog-top {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .25rem;
+}
+.bname { color: var(--fg); font-size: 16px; }
+.bdate { color: var(--muted); font-size: 13px; white-space: nowrap; align-self: center; }
+.bdesc { color: var(--muted); font-size: 15px; line-height: 1.85; }
+.btags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .5rem; }
+.btag  {
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 9px;
+  border-radius: 2px;
+  letter-spacing: .04em;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .6rem 3rem;
+  font-size: 15px;
+}
+
+.kk  { color: var(--accent); }
+.kvv { color: var(--muted); }
+
+.dump-sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.2rem 0;
+}
+
+.dump-lbl {
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.1rem;
+}
+
+.dump-lbl em { color: var(--accent); font-style: normal; }
+
+.t-err { color: var(--muted); font-size: 14px; }
+.t-err span { color: #e06464; }
+.t-hint { color: var(--accent); }
+
+.t-ok { color: var(--muted); font-size: 14px; line-height: 2.4; }
+
+.blog-soon { font-size: 14px; color: var(--muted); font-style: italic; }
+
+/* post body view */
+.post-view { max-width: 580px; }
+.post-view .post-title { color: var(--fg); font-size: 16px; margin-bottom: .6rem; line-height: 1.45; }
+.post-view .post-meta  { color: var(--muted); font-size: 13px; margin-bottom: 1.3rem; }
+.post-view .post-body  { color: var(--muted); font-size: 14px; line-height: 1.85; }
+
+/* ── Writing feed ───────────────────────────────────────── */
+.post-feed {
+  display: grid;
+  gap: 1rem;
+  margin-top: .6rem;
+  max-width: 100%;
+}
+
+.post-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  background: rgba(255,255,255,.015);
+  transition: border-color .15s, background .15s, transform .15s;
+}
+
+.post-card:hover {
+  border-color: var(--accent);
+  background: rgba(201, 165, 90, 0.05);
+  transform: translateY(-1px);
+}
+
+.post-card-link {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.post-card-title {
+  color: var(--fg);
+  font-size: 17px;
+  margin-bottom: .35rem;
+  line-height: 1.45;
+}
+
+.post-card-meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: .55rem;
+}
+
+.post-card-desc {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.85;
+}
+
+.post-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-top: .65rem;
+}
+
+.post-card-tag {
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: .04em;
+}
+
+.post-shell {
+  max-width: 100%;
+  padding: 0.2rem 0 0.4rem;
+}
+
+.post-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin-bottom: 1.4rem;
+}
+
+.post-kicker {
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .85rem;
+  font-weight: 700;
+}
+
+.post-article {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2.2rem 2.5rem 2.5rem;
+  background: rgba(255,255,255,.015);
+}
+
+.post-article .post-title {
+  color: var(--fg);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+  margin-bottom: .6rem;
+  line-height: 1.35;
+}
+
+.post-article .post-meta {
+  color: var(--muted);
+  font-size: 13px;
+  margin-bottom: 1.2rem;
+}
+
+.post-article .post-body {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.95;
+}
+
+.post-article .post-body p,
+.post-article .post-body ul,
+.post-article .post-body ol,
+.post-article .post-body pre,
+.post-article .post-body figure {
+  margin-bottom: 1.2rem;
+}
+
+.post-article .post-body h1,
+.post-article .post-body h2,
+.post-article .post-body h3,
+.post-article .post-body h4 {
+  color: var(--fg);
+  margin: 1.8rem 0 .75rem;
+  line-height: 1.35;
+  font-weight: 700;
+}
+
+.post-article .post-body h1 { font-size: clamp(1.25rem, 2.4vw, 1.65rem); }
+.post-article .post-body h2 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+.post-article .post-body h3 { font-size: 1.05rem; }
+.post-article .post-body h4 { font-size: 1rem; color: var(--muted); }
+
+.post-article .post-body li {
+  margin-bottom: .45rem;
+  padding-left: .2rem;
+}
+
+.post-article .post-body ul,
+.post-article .post-body ol {
+  padding-left: 1.4rem;
+}
+
+.post-article .post-body blockquote {
+  margin: 1.4rem 0;
+  padding: .9rem 1.1rem;
+  border-left: 3px solid var(--accent);
+  background: rgba(201,165,90,.04);
+  color: var(--muted);
+}
+
+.post-article .post-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.post-article .post-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+.post-article .post-body .table-wrap {
+  overflow-x: auto;
+  margin-bottom: 1.2rem;
+}
+
+.post-article .post-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.post-article .post-body th,
+.post-article .post-body td {
+  border: 1px solid var(--border);
+  padding: .55rem .75rem;
+  text-align: left;
+}
+
+.post-article .post-body th {
+  color: var(--fg);
+  background: rgba(255,255,255,.03);
+}
+
+.post-article .post-body pre {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow-x: auto;
+  background: rgba(255,255,255,.02);
+  margin-bottom: 1.2rem;
+}
+
+.post-article .post-body pre code.hljs {
+  display: block;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.post-article .post-body :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  padding: .12em .4em;
+  border-radius: 4px;
+  color: var(--fg);
+}
+
+.post-article .post-body .hljs { color: var(--fg); background: transparent; }
+.post-article .post-body .hljs-keyword,
+.post-article .post-body .hljs-selector-tag,
+.post-article .post-body .hljs-title { color: var(--accent); }
+.post-article .post-body .hljs-string,
+.post-article .post-body .hljs-number,
+.post-article .post-body .hljs-literal { color: var(--accent2); }
+.post-article .post-body .hljs-comment,
+.post-article .post-body .hljs-quote { color: var(--muted); font-style: italic; }
+.post-article .post-body .hljs-built_in,
+.post-article .post-body .hljs-name { color: #8cb4c9; }
+.post-article .post-body .hljs-meta { color: var(--muted); }
+
+.post-article .post-body figure {
+  margin: 1.4rem 0;
+}
+
+.post-article .post-body img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.post-article .post-body a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.post-article .post-body a:hover {
+  text-decoration: underline;
+}
+
+.post-article .post-body strong {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+/* ── Route shell ─────────────────────────────────────────── */
+body.route-page #home-shell {
+  display: none;
+}
+
+body.route-page #route-shell {
+  display: block;
+}
+
+#route-shell {
+  display: none;
+}
+
+/* ── Connect links ────────────────────────────────────────── */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-top: .8rem;
+}
+
+.lnk {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 15px;
+  padding: 8px 22px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  transition: color .15s, border-color .15s, background .15s;
+  letter-spacing: .04em;
+}
+
+.lnk:hover {
+  color: var(--fg);
+  border-color: var(--accent);
+  background: var(--glow);
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+#site-footer {
+  margin-top: 6rem;
+  padding-top: 1.8rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+
+#site-footer a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .15s;
+}
+
+#site-footer a:hover { color: var(--fg); }
+
+/* ── Scrollbar ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 560px) {
+  #pg { padding: 3rem 1.4rem 5rem; }
+  #hero h1 { font-size: 1.6rem; }
+  #term-body { padding: 1.2rem 1.2rem 1.4rem; }
+  .kv { gap: .4rem 1.8rem; }
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"/>
+</head>
+<body>
+<div id="pg">
+  <div id="home-shell">
+    <!-- Status bar -->
+    <div id="statusbar">
+      <span class="bar-path">saankhya srikanth</span>
+      <span class="bar-sep">/</span>
+      <span>PESU ECC &middot; Bengaluru</span>
+    </div>
+
+    <!-- Hero -->
+    <div id="hero">
+      <h1>hi, i'm saankhya </h1>
+      <div class="tagline">
+        <p>CSE student at PESU ECC, Bengaluru. I like understanding how things work at a low level like how an OS isolates processes, how data is actually stored, how distributed systems stay consistent when things break.</p>
+        <p>Right now I'm exploring systems engineering, container internals and cybersecurity. Also learning Rust because apparently I enjoy pain.</p>
+      </div>
+    </div>
+
+    <!-- Recent Posts -->
+    <div class="sec-label">recent posts</div>
+    <div id="writing-feed" class="post-feed"></div>
+
+    <!-- Projects -->
+    <div class="sec-label">projects</div>
+    <div class="proj-list">
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Mocker</span>
+          <span class="plang">C / Go</span>
+        </div>
+        <div class="pdesc">Container runtime built from scratch featuring namespace isolation, cgroups, process containment, and low-level Linux systems programming. Grew out of Potato CPU, a custom x86-style emulator implementing registers, memory management, and a fetch-decode-execute pipeline.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">RadFS</span>
+          <span class="plang">Go / FUSE</span>
+        </div>
+        <div class="pdesc">Userspace filesystem built with FUSE featuring adaptive radix tree indexing, efficient path resolution, and prefix compression for reduced memory overhead.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Frame</span>
+          <span class="plang">Founding Team</span>
+        </div>
+        <div class="pdesc">Node-based workflow editor for AI/media generation pipelines with orchestration, deployment automation, and cloud infrastructure tooling.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">How I Met Your Password</span>
+          <span class="plang">Flask + JavaScript</span>
+        </div>
+        <div class="pdesc">Local cybersecurity dashboard integrating Have I Been Pwned, OSINT lookups, and local port scanning while keeping all data on-device without cloud storage.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Algorithm Optimization</span>
+          <span class="plang">Python</span>
+        </div>
+        <div class="pdesc">A* search and Q-learning experiments for pathfinding, heuristic optimization, and performance analysis of classical search algorithms.</div>
+      </div>
+    </div>
+
+    <!-- Open Source Contributions -->
+    <div class="sec-label">open source</div>
+    <div class="proj-list">
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">Xeneva OS</span>
+          <span class="plang">Open Source Contributor</span>
+        </div>
+        <div class="pdesc">Contributing to the RISC-V port of XenevaOS by working on architecture specific components and learning about operating system internals.</div>
+      </div>
+      <div class="proj-item">
+        <div class="proj-top">
+          <span class="pname">LitmusChaos</span>
+          <span class="plang">Open Source Contributor</span>
+        </div>
+        <div class="pdesc">Contributed to LitmusChaos by implementing a YAML view for Chaos Probe configurations in ChaosCenter, integrating GraphQL queries and optimizing data fetching using Apollo Client caching and lazy loading.</div>
+      </div>
+    </div>
+
+    <hr class="sep"/>
+
+    <!-- Connect -->
+    <div class="sec-label">connect</div>
+    <div class="prose">
+      <p>Happy to connect and collaborate :)</p>
+    </div>
+    <div class="links">
+      <a class="lnk" href="https://github.com/SaankLeo" target="_blank" rel="noopener">github</a>
+      <a class="lnk" href="https://leetcode.com/u/SaankLeo/" target="_blank" rel="noopener">leetcode</a>
+      <a class="lnk" href="https://www.linkedin.com/in/saankhya-srikanth-251b291b7/" target="_blank" rel="noopener">linkedin</a>
+      <a class="lnk" href="mailto:saankhyas18@gmail.com">email</a>
+    </div>
+
+    <!-- Footer -->
+    <div id="site-footer">
+      <span>rendered with anna</span>
+      <span>2026</span>
+    </div>
+  </div>
+
+  <div id="route-shell"></div>
+</div><!-- #pg -->
+
+<script src="../../static/post-utils.js"></script>
+<script src="../../static/app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+  // Highlight code blocks injected by the SPA router
+  document.addEventListener('hljs-ready', function() {
+    document.querySelectorAll('pre code').forEach(function(block) {
+      hljs.highlightElement(block);
+    });
+  });
+</script>
+</body>
+</html>

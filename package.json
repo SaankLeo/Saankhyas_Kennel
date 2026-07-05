@@ -2,6 +2,7 @@
   "name": "saankhyas-kennel",
   "private": true,
   "scripts": {
+    "build": "node scripts/build-static.js",
     "start": "node server.js",
     "test": "node --test tests/post-utils.test.js"
   },
