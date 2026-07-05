@@ -44,6 +44,13 @@ html, body {
   padding: 5rem clamp(2rem, 7vw, 6rem) 8rem;
 }
 
+body.route-page #pg {
+  width: 100%;
+  max-width: 1480px;
+  padding-left: clamp(2rem, 5vw, 5rem);
+  padding-right: clamp(2rem, 5vw, 5rem);
+}
+
 /* ── Status bar (top) ─────────────────────────────────────── */
 #statusbar {
   display: flex;
@@ -408,7 +415,7 @@ html, body {
 .post-article {
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 2.2rem 2.5rem 2.5rem;
+  padding: clamp(2rem, 4vw, 3.6rem) clamp(2rem, 5vw, 4.8rem);
   background: rgba(255,255,255,.015);
 }
 

@@ -94,10 +94,11 @@ function renderBlogPage(posts, selectedSlug) {
 :root { --bg:#0c0c0a; --surface:#111110; --fg:#d6d0be; --muted:#7a7a68; --dim:#252520; --border:#2e2e28; --accent:#c9a55a; --accent2:#6b9e78; --glow:rgba(201,165,90,0.07); --mono:"JetBrains Mono","Fira Code",monospace; }
 html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 18px; line-height: 1.9; min-height: 100vh; }
 #pg { max-width: 900px; margin: 0 auto; padding: 5rem clamp(2rem, 7vw, 6rem) 8rem; }
+body.route-page #pg { width: 100%; max-width: 1480px; padding-left: clamp(2rem, 5vw, 5rem); padding-right: clamp(2rem, 5vw, 5rem); }
 .post-shell { max-width: 100%; padding: 0.2rem 0 0.4rem; }
 .post-topbar { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.4rem; }
 .post-kicker { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: .85rem; font-weight: 700; }
-.post-article { border: 1px solid var(--border); border-radius: 8px; padding: 2.2rem 2.5rem 2.5rem; background: rgba(255,255,255,.015); box-shadow: 0 10px 30px rgba(0,0,0,.18); }
+.post-article { border: 1px solid var(--border); border-radius: 8px; padding: clamp(2rem, 4vw, 3.6rem) clamp(2rem, 5vw, 4.8rem); background: rgba(255,255,255,.015); box-shadow: 0 10px 30px rgba(0,0,0,.18); }
 .post-article .post-title { color: var(--fg); font-size: clamp(1.2rem, 2.3vw, 1.75rem); margin-bottom: .65rem; line-height: 1.35; }
 .post-article .post-meta { color: var(--muted); font-size: 13px; margin-bottom: 1.3rem; }
 .post-article .post-body { color: var(--muted); font-size: 16px; line-height: 1.95; }
