@@ -67,7 +67,8 @@
 
   function renderBlogIndex(posts) {
     if (!posts.length) {
-      feed.innerHTML = '<div class="post-shell"><div class="post-article"><div class="post-kicker">blog</div><div class="post-title">Blog</div><div class="post-body"><p>No posts yet.</p></div></div></div>';
+      showRouteView();
+      routeShell.innerHTML = '<div class="post-shell"><div class="post-article"><div class="post-kicker">blog</div><div class="post-title">Blog</div><div class="post-body"><p>No posts yet.</p></div></div></div>';
       return;
     }
 
@@ -128,8 +129,47 @@
 
   async function loadPosts() {
     if (state.ready) return state.posts;
+
+    try {
+      var response = await fetch('/static/index.json');
+      var contentType = response.headers.get('content-type') || '';
+      if (response.ok && contentType.indexOf('application/json') !== -1) {
+        var data = await response.json();
+        var posts = [];
+        for (var key in data) {
+          var item = data[key];
+          var fm = item.Frontmatter || {};
+          var collections = fm.Collections || [];
+          if (collections.includes('posts')) {
+            var url = item.CompleteURL || '';
+            var parts = url.split('/').filter(Boolean);
+            var last = parts.pop() || '';
+            var slug = (last === 'index.html' || last === 'index') ? (parts.pop() || '') : last.replace(/\.html$/, '');
+            if (slug) {
+              posts.push({
+                slug: slug,
+                title: fm.Title || slug,
+                date: fm.Date || '',
+                description: fm.Description || '',
+                tags: fm.Tags || []
+              });
+            }
+          }
+        }
+        posts.sort(function (a, b) {
+          return new Date(b.date) - new Date(a.date);
+        });
+        state.posts = posts;
+        state.ready = true;
+        return state.posts;
+      }
+    } catch (e) {
+      console.warn('Failed to load posts from static/index.json, trying fallback', e);
+    }
+
     var response = await fetch('/api/posts');
-    if (!response.ok) throw new Error('Unable to load posts');
+    var contentType = response.headers.get('content-type') || '';
+    if (!response.ok || contentType.indexOf('application/json') === -1) throw new Error('Unable to load posts');
     state.posts = await response.json();
     state.ready = true;
     return state.posts;
@@ -151,17 +191,32 @@
           return;
         }
 
-        var postResponse = await fetch('/api/post/' + post.slug);
-        if (!postResponse.ok) {
-          showRouteView();
-          routeShell.innerHTML = '<div class="t-err">The markdown file for this post is missing.</div>';
-          return;
+        var parsed;
+        try {
+          var postResponse = await fetch('/api/post/' + post.slug);
+          var contentType = postResponse.headers.get('content-type') || '';
+          if (postResponse.ok && contentType.indexOf('application/json') !== -1) {
+            parsed = await postResponse.json();
+          }
+        } catch (e) {
+          console.warn('Failed to fetch post from API, trying markdown file', e);
         }
 
-        var parsed = await postResponse.json();
+        if (!parsed) {
+          var markdownResponse = await fetch('/content/posts/' + post.slug + '.md');
+          if (!markdownResponse.ok) {
+            showRouteView();
+            routeShell.innerHTML = '<div class="t-err">The markdown file for this post is missing.</div>';
+            return;
+          }
+          var markdownText = await markdownResponse.text();
+          parsed = window.parseMarkdownPost(markdownText, post.slug);
+        }
+
         renderPostView(post, parsed);
       } catch (error) {
-        feed.innerHTML = '<div class="t-err">Unable to render this post right now.</div>';
+        showRouteView();
+        routeShell.innerHTML = '<div class="t-err">Unable to render this post right now.</div>';
       }
       return;
     }
@@ -171,7 +226,8 @@
         await loadPosts();
         renderBlogIndex(state.posts);
       } catch (error) {
-        feed.innerHTML = '<div class="t-err">Unable to load the blog right now.</div>';
+        showRouteView();
+        routeShell.innerHTML = '<div class="t-err">Unable to load the blog right now.</div>';
       }
       return;
     }
@@ -180,7 +236,9 @@
       await loadPosts();
       renderHome(state.posts);
     } catch (error) {
-      feed.innerHTML = '<div class="t-err">Unable to load posts right now.</div>';
+      if (feed) {
+        feed.innerHTML = '<div class="t-err">Unable to load posts right now.</div>';
+      }
     }
   }
 

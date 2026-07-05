@@ -92,12 +92,12 @@ function renderBlogPage(posts, selectedSlug) {
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root { --bg:#0c0c0a; --surface:#111110; --fg:#d6d0be; --muted:#7a7a68; --dim:#252520; --border:#2e2e28; --accent:#c9a55a; --accent2:#6b9e78; --glow:rgba(201,165,90,0.07); --mono:"JetBrains Mono","Fira Code",monospace; }
-html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 17px; line-height: 1.9; min-height: 100vh; }
+html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 18px; line-height: 1.9; min-height: 100vh; }
 #pg { max-width: 900px; margin: 0 auto; padding: 5rem clamp(2rem, 7vw, 6rem) 8rem; }
-.post-shell { max-width: 760px; padding: 0.2rem 0 0.4rem; }
+.post-shell { max-width: 100%; padding: 0.2rem 0 0.4rem; }
 .post-topbar { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.4rem; }
 .post-kicker { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: .85rem; font-weight: 700; }
-.post-article { border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem 1.5rem 1.7rem; background: rgba(255,255,255,.015); box-shadow: 0 10px 30px rgba(0,0,0,.18); }
+.post-article { border: 1px solid var(--border); border-radius: 8px; padding: 2.2rem 2.5rem 2.5rem; background: rgba(255,255,255,.015); box-shadow: 0 10px 30px rgba(0,0,0,.18); }
 .post-article .post-title { color: var(--fg); font-size: clamp(1.2rem, 2.3vw, 1.75rem); margin-bottom: .65rem; line-height: 1.35; }
 .post-article .post-meta { color: var(--muted); font-size: 13px; margin-bottom: 1.3rem; }
 .post-article .post-body { color: var(--muted); font-size: 16px; line-height: 1.95; }
@@ -136,12 +136,12 @@ html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); 
 .post-card { border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.1rem; background: rgba(255,255,255,.015); margin-bottom: 1rem; transition: border-color .15s, background .15s; }
 .post-card:hover { border-color: var(--accent); background: rgba(201,165,90,0.05); }
 .post-card-link { color: inherit; text-decoration: none; display: block; }
-.post-card-title { color: var(--fg); font-size: 16px; margin-bottom: .35rem; line-height: 1.45; }
+.post-card-title { color: var(--fg); font-size: 17px; margin-bottom: .35rem; line-height: 1.45; }
 .post-card-meta { color: var(--muted); font-size: 13px; margin-bottom: .55rem; }
-.post-card-desc { color: var(--muted); font-size: 15px; line-height: 1.8; }
+.post-card-desc { color: var(--muted); font-size: 16px; line-height: 1.85; }
 .post-card-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .65rem; }
 .post-card-tag { font-size: 12px; color: var(--muted); border: 1px solid var(--border); padding: 2px 8px; border-radius: 2px; letter-spacing: .04em; }
-.lnk { color: var(--muted); text-decoration: none; font-size: 14px; padding: 7px 20px; border: 1px solid var(--border); border-radius: 3px; transition: color .15s, border-color .15s, background .15s; letter-spacing: .04em; }
+.lnk { color: var(--muted); text-decoration: none; font-size: 15px; padding: 8px 22px; border: 1px solid var(--border); border-radius: 3px; transition: color .15s, border-color .15s, background .15s; letter-spacing: .04em; }
 .lnk:hover { color: var(--fg); border-color: var(--accent); background: var(--glow); }
 </style>
 </head>
