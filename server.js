@@ -95,22 +95,22 @@ function renderBlogPage(posts, selectedSlug) {
 html, body { background: var(--bg); color: var(--fg); font-family: var(--mono); font-size: 18px; line-height: 1.9; min-height: 100vh; }
 #pg { width: 100%; max-width: none; padding: 5rem clamp(2rem, 7vw, 6rem) 8rem; }
 #home-shell { max-width: 900px; margin: 0 auto; }
-#route-shell { width: 100%; }
+#route-shell { width: 100%; max-width: 1180px; margin: 0 auto; }
 body.route-page #pg { padding-left: clamp(1rem, 2vw, 2rem); padding-right: clamp(1rem, 2vw, 2rem); }
 .post-shell { max-width: 100%; padding: 0.2rem 0 0.4rem; }
 .post-topbar { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 1.4rem; }
 .post-kicker { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: .85rem; font-weight: 700; }
 .post-article { border: 1px solid var(--border); border-radius: 8px; width: 100%; padding: clamp(1.6rem, 3vw, 3rem); background: rgba(255,255,255,.015); box-shadow: 0 10px 30px rgba(0,0,0,.18); }
-.post-article .post-title { color: var(--fg); font-size: clamp(1.6rem, 3vw, 2.8rem); margin-bottom: .65rem; line-height: 1.35; }
+.post-article .post-title { color: var(--fg); font-size: clamp(1.35rem, 2.3vw, 2.15rem); margin-bottom: .65rem; line-height: 1.35; }
 .post-article .post-meta { color: var(--muted); font-size: 13px; margin-bottom: 1.3rem; }
-.post-article .post-body { color: var(--muted); font-size: clamp(18px, 1.35vw, 23px); line-height: 1.85; }
+.post-article .post-body { color: var(--muted); font-size: clamp(17px, 1vw, 19px); line-height: 1.9; }
 .post-article .post-body p, .post-article .post-body ul, .post-article .post-body ol, .post-article .post-body pre, .post-article .post-body figure { margin-bottom: 1.2rem; }
 .post-article .post-body h1,
 .post-article .post-body h2,
 .post-article .post-body h3,
 .post-article .post-body h4 { color: var(--fg); margin: 1.8rem 0 .75rem; line-height: 1.35; font-weight: 700; }
-.post-article .post-body h1 { font-size: clamp(1.8rem, 3vw, 2.8rem); }
-.post-article .post-body h2 { font-size: clamp(1.35rem, 2.2vw, 2rem); }
+.post-article .post-body h1 { font-size: clamp(1.45rem, 2.2vw, 2.1rem); }
+.post-article .post-body h2 { font-size: clamp(1.2rem, 1.7vw, 1.55rem); }
 .post-article .post-body h3 { font-size: 1.05rem; }
 .post-article .post-body h4 { font-size: 1rem; color: var(--muted); }
 .post-article .post-body li { margin-bottom: .45rem; padding-left: .2rem; }
